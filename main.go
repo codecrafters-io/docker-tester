@@ -1,14 +1,16 @@
 package main
 
-import "fmt"
-import "os"
-import "os/exec"
-import "syscall"
-import "time"
-import "os/signal"
+import (
+	"fmt"
+	"os"
+	"os/exec"
+	"os/signal"
+	"syscall"
+	"time"
+)
 
 func main() {
-	fmt.Println("Welcome to the redis challenge!")
+	fmt.Println("Welcome to the docker challenge!")
 	fmt.Println("")
 
 	context, err := GetContext()

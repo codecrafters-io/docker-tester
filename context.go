@@ -1,7 +1,9 @@
 package main
 
-import "flag"
-import "fmt"
+import (
+	"flag"
+	"fmt"
+)
 
 // Context holds all flags that a user has passed in
 type Context struct {
@@ -24,7 +26,7 @@ func GetContext() (Context, error) {
 	binaryPathPtr := flag.String(
 		"binary-path",
 		"",
-		"path to the redis executable to test. Ex: ./run_redis.sh")
+		"path to the executable to test. Ex: ./run_program.sh")
 
 	debugPtr := flag.Bool(
 		"debug",

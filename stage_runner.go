@@ -1,8 +1,10 @@
 package main
 
-import "time"
-import "fmt"
-import "math/rand"
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
 
 // StageRunnerResult is returned from StageRunner.Run()
 type StageRunnerResult struct {
@@ -28,34 +30,9 @@ func newStageRunner(isDebug bool) StageRunner {
 		isDebug: isDebug,
 		stages: []Stage{
 			Stage{
-				name:    "Stage 0: Bind to a port",
+				name:    "Stage 0: Execute a program",
 				logger:  getLogger(isDebug, "[stage-0] "),
-				runFunc: testBindToPort,
-			},
-			Stage{
-				name:    "Stage 1: PING <-> PONG",
-				logger:  getLogger(isDebug, "[stage-1] "),
-				runFunc: testPingPong,
-			},
-			Stage{
-				name:    "Stage 2: ECHO... O... O...",
-				logger:  getLogger(isDebug, "[stage-2] "),
-				runFunc: testEcho,
-			},
-			Stage{
-				name:    "Stage 3: Multiple Clients",
-				logger:  getLogger(isDebug, "[stage-3] "),
-				runFunc: testMultipleClients,
-			},
-			Stage{
-				name:    "Stage 4: SET & GET",
-				logger:  getLogger(isDebug, "[stage-4] "),
-				runFunc: testGetSet,
-			},
-			Stage{
-				name:    "Stage 5: Expiry!",
-				logger:  getLogger(isDebug, "[stage-5] "),
-				runFunc: testExpiry,
+				runFunc: nil,
 			},
 		},
 	}
