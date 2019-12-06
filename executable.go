@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"io"
 	"io/ioutil"
 	"os/exec"
@@ -10,9 +11,11 @@ import (
 type Executable struct {
 	path          string
 	timeoutInSecs int
-	cmd           *exec.Cmd
-	stdoutPipe    io.ReadCloser
-	stderrPipe    io.ReadCloser
+
+	// These are set & removed together
+	cmd        *exec.Cmd
+	stdoutPipe io.ReadCloser
+	stderrPipe io.ReadCloser
 }
 
 // ExecutableResult holds the result of an executable run
@@ -27,9 +30,17 @@ func NewExecutable(path string) *Executable {
 	return &Executable{path: path, timeoutInSecs: 10}
 }
 
+func (e *Executable) isRunning() bool {
+	return e.cmd != nil
+}
+
 // Start starts the specified command but does not wait for it to complete.
 func (e *Executable) Start(args ...string) error {
 	var err error
+
+	if e.isRunning() {
+		return errors.New("process already in progress")
+	}
 
 	// TODO: Use timeout!
 	e.cmd = exec.Command(e.path, args...)
@@ -59,6 +70,12 @@ func (e *Executable) Wait() (ExecutableResult, error) {
 	}
 
 	e.cmd.Wait()
+
+	defer func() {
+		e.cmd = nil
+		e.stdoutPipe = nil
+		e.stderrPipe = nil
+	}()
 
 	return ExecutableResult{
 		Stdout:   stdout,
