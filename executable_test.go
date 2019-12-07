@@ -16,11 +16,17 @@ func TestStart(t *testing.T) {
 	assert.Assert(t, cmp.Nil(err))
 }
 
+func TestRun(t *testing.T) {
+	e := NewExecutable("./test_helpers/stdout_echo.sh")
+	result, err := e.Run("hey")
+	assert.Assert(t, cmp.Nil(err))
+	assert.Assert(t, cmp.Equal(string(result.Stdout), "hey\n"))
+}
+
 func TestOutputCapture(t *testing.T) {
 	// Stdout capture
 	e := NewExecutable("./test_helpers/stdout_echo.sh")
-	e.Start("hey")
-	result, err := e.Wait()
+	result, err := e.Run("hey")
 
 	assert.Assert(t, cmp.Nil(err))
 	assert.Assert(t, cmp.Equal(string(result.Stdout), "hey\n"))
@@ -28,8 +34,7 @@ func TestOutputCapture(t *testing.T) {
 
 	// Stderr capture
 	e = NewExecutable("./test_helpers/stderr_echo.sh")
-	e.Start("hey")
-	result, err = e.Wait()
+	result, err = e.Run("hey")
 
 	assert.Assert(t, cmp.Nil(err))
 	assert.Assert(t, cmp.Equal(string(result.Stdout), ""))
@@ -39,12 +44,10 @@ func TestOutputCapture(t *testing.T) {
 func TestExitCode(t *testing.T) {
 	e := NewExecutable("./test_helpers/exit_with.sh")
 
-	e.Start("0")
-	result, _ := e.Wait()
+	result, _ := e.Run("0")
 	assert.Assert(t, cmp.Equal(0, result.ExitCode))
 
-	e.Start("1")
-	result, _ = e.Wait()
+	result, _ = e.Run("1")
 	assert.Assert(t, cmp.Equal(1, result.ExitCode))
 }
 
@@ -55,8 +58,12 @@ func TestExecutableStartNotAllowedIfInProgress(t *testing.T) {
 	err := e.Start("0.01")
 	assert.Assert(t, cmp.Nil(err))
 
-	// Running again when in progress should throw an error
+	// Starting again when in progress should throw an error
 	err = e.Start("0.01")
+	assert.Assert(t, cmp.ErrorContains(err, "process already in progress"))
+
+	// Running again when in progress should throw an error
+	_, err = e.Run("0.01")
 	assert.Assert(t, cmp.ErrorContains(err, "process already in progress"))
 
 	e.Wait()
@@ -69,11 +76,9 @@ func TestExecutableStartNotAllowedIfInProgress(t *testing.T) {
 func TestSuccessiveExecutions(t *testing.T) {
 	e := NewExecutable("./test_helpers/stdout_echo.sh")
 
-	e.Start("1")
-	result, _ := e.Wait()
+	result, _ := e.Run("1")
 	assert.Assert(t, cmp.Equal(string(result.Stdout), "1\n"))
 
-	e.Start("2")
-	result, _ = e.Wait()
+	result, _ = e.Run("2")
 	assert.Assert(t, cmp.Equal(string(result.Stdout), "2\n"))
 }
