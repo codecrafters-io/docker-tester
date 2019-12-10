@@ -9,8 +9,7 @@ import (
 func TestStart(t *testing.T) {
 	err := NewExecutable("/blah").Start()
 	assertErrorContains(t, err, "no such file")
-	// assert.Assert(t, cmp.ErrorContains(err, "no such file"))
-	// assert.Assert(t, cmp.ErrorContains(err, "/blah"))
+	assertErrorContains(t, err, "/blah")
 
 	err = NewExecutable("./test_helpers/executable_test/stdout_echo.sh").Start()
 	assert.NoError(t, err)
