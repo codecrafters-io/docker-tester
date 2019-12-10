@@ -6,11 +6,16 @@ require (
 	github.com/fatih/color v1.7.0
 	github.com/go-redis/redis v6.15.6+incompatible
 	github.com/google/go-cmp v0.3.1 // indirect
+	github.com/kr/pretty v0.1.0 // indirect
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
+	github.com/onsi/ginkgo v1.10.3 // indirect
+	github.com/onsi/gomega v1.7.1 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
-	github.com/stretchr/objx v0.2.0 // indirect
-	golang.org/x/tools/gopls v0.2.1 // indirect
+	github.com/stretchr/testify v1.4.0
+	golang.org/x/net v0.0.0-20190620200207-3b0461eec859 // indirect
+	golang.org/x/sync v0.0.0-20190423024810-112230192c58 // indirect
+	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/yaml.v2 v2.2.7 // indirect
 	gotest.tools v2.2.0+incompatible
 )
