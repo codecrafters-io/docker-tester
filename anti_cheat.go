@@ -1,19 +1,22 @@
 package main
 
-import "github.com/go-redis/redis"
-import "fmt"
-import "time"
-import "strings"
+import (
+	"fmt"
+	"strings"
+	"time"
+
+	"github.com/go-redis/redis"
+)
 
 func antiCheatRunner() StageRunner {
 	return StageRunner{
 		isDebug: false,
-		stages: []Stage{
-			Stage{
-				name:    "AC1",
-				logger:  getQuietLogger("[anticheat] "),
-				runFunc: testCommand,
-			},
+		stages:  []Stage{
+			// Stage{
+			// 	name:    "AC1",
+			// 	logger:  getQuietLogger("[anticheat] "),
+			// 	runFunc: testCommand,
+			// },
 		},
 	}
 }

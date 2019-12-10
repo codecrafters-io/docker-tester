@@ -32,21 +32,21 @@ func newStageRunner(isDebug bool) StageRunner {
 			Stage{
 				name:    "Stage 0: Execute a program",
 				logger:  getLogger(isDebug, "[stage-0] "),
-				runFunc: nil,
+				runFunc: testBasicExec,
 			},
 		},
 	}
 }
 
 // Run tests in a specific StageRunner
-func (r StageRunner) Run() StageRunnerResult {
+func (r StageRunner) Run(executable *Executable) StageRunnerResult {
 	for index, stage := range r.stages {
 		logger := stage.logger
 		logger.Infof("Running test: %s", stage.name)
 
 		stageResultChannel := make(chan error, 1)
 		go func() {
-			err := stage.runFunc(logger)
+			err := stage.runFunc(executable, logger)
 			stageResultChannel <- err
 		}()
 
@@ -129,6 +129,6 @@ func reportTestError(err error, isDebug bool, logger *customLogger) {
 type Stage struct {
 	name        string
 	description string
-	runFunc     func(logger *customLogger) error
+	runFunc     func(executable *Executable, logger *customLogger) error
 	logger      *customLogger
 }

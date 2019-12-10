@@ -16,7 +16,7 @@ test_first_stage: build
 	dist/main.out --binary-path=./run_success.sh
 
 test_debug: build
-	dist/main.out --stage 8 --binary-path=./run_success.sh --debug=true
+	dist/main.out --stage 8 --binary-path=./test_helpers/stages/basic_exec_correct.sh --debug=true
 
 test_for_failure: build
 	dist/main.out --stage 8 --binary-path=./run_failure.sh

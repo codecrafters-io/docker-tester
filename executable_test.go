@@ -12,12 +12,12 @@ func TestStart(t *testing.T) {
 	assert.Assert(t, cmp.ErrorContains(err, "no such file"))
 	assert.Assert(t, cmp.ErrorContains(err, "/blah"))
 
-	err = NewExecutable("/usr/bin/echo").Start()
+	err = NewExecutable("./test_helpers/executable_test/stdout_echo.sh").Start()
 	assert.Assert(t, cmp.Nil(err))
 }
 
 func TestRun(t *testing.T) {
-	e := NewExecutable("./test_helpers/stdout_echo.sh")
+	e := NewExecutable("./test_helpers/executable_test/stdout_echo.sh")
 	result, err := e.Run("hey")
 	assert.Assert(t, cmp.Nil(err))
 	assert.Assert(t, cmp.Equal(string(result.Stdout), "hey\n"))
@@ -25,7 +25,7 @@ func TestRun(t *testing.T) {
 
 func TestOutputCapture(t *testing.T) {
 	// Stdout capture
-	e := NewExecutable("./test_helpers/stdout_echo.sh")
+	e := NewExecutable("./test_helpers/executable_test/stdout_echo.sh")
 	result, err := e.Run("hey")
 
 	assert.Assert(t, cmp.Nil(err))
@@ -33,7 +33,7 @@ func TestOutputCapture(t *testing.T) {
 	assert.Assert(t, cmp.Equal(string(result.Stderr), ""))
 
 	// Stderr capture
-	e = NewExecutable("./test_helpers/stderr_echo.sh")
+	e = NewExecutable("./test_helpers/executable_test/stderr_echo.sh")
 	result, err = e.Run("hey")
 
 	assert.Assert(t, cmp.Nil(err))
@@ -42,7 +42,7 @@ func TestOutputCapture(t *testing.T) {
 }
 
 func TestExitCode(t *testing.T) {
-	e := NewExecutable("./test_helpers/exit_with.sh")
+	e := NewExecutable("./test_helpers/executable_test/exit_with.sh")
 
 	result, _ := e.Run("0")
 	assert.Assert(t, cmp.Equal(0, result.ExitCode))
@@ -52,7 +52,7 @@ func TestExitCode(t *testing.T) {
 }
 
 func TestExecutableStartNotAllowedIfInProgress(t *testing.T) {
-	e := NewExecutable("./test_helpers/sleep_for.sh")
+	e := NewExecutable("./test_helpers/executable_test/sleep_for.sh")
 
 	// Run once
 	err := e.Start("0.01")
@@ -74,7 +74,7 @@ func TestExecutableStartNotAllowedIfInProgress(t *testing.T) {
 }
 
 func TestSuccessiveExecutions(t *testing.T) {
-	e := NewExecutable("./test_helpers/stdout_echo.sh")
+	e := NewExecutable("./test_helpers/executable_test/stdout_echo.sh")
 
 	result, _ := e.Run("1")
 	assert.Assert(t, cmp.Equal(string(result.Stdout), "1\n"))

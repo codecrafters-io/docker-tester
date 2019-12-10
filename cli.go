@@ -9,14 +9,15 @@ import (
 	"time"
 )
 
-func CLIRun(args ...string{}, ) {
+// RunCLI executes the CLI program with given flags, and returns the exit code
+func RunCLI(args ...string) int {
 	fmt.Println("Welcome to the docker challenge!")
 	fmt.Println("")
 
-	context, err := GetContext()
+	context, err := GetContext(args)
 	if err != nil {
 		fmt.Printf("%s", err)
-		os.Exit(1)
+		return 1
 	}
 
 	context.print()
