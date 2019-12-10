@@ -22,7 +22,7 @@ func (c Context) print() {
 }
 
 // GetContext parses flags and returns a Context object
-func GetContext() (Context, error) {
+func GetContext(args []string) (Context, error) {
 	binaryPathPtr := flag.String(
 		"binary-path",
 		"",
@@ -48,7 +48,7 @@ func GetContext() (Context, error) {
 		0,
 		"The current stage you're on")
 
-	flag.Parse()
+	flag.CommandLine.Parse(args)
 
 	if *binaryPathPtr == "" {
 		return Context{}, fmt.Errorf("" +

@@ -10,7 +10,7 @@ import (
 )
 
 // RunCLI executes the CLI program with given flags, and returns the exit code
-func RunCLI(args ...string) int {
+func RunCLI(args []string) int {
 	fmt.Println("Welcome to the docker challenge!")
 	fmt.Println("")
 
@@ -33,30 +33,32 @@ func RunCLI(args ...string) int {
 
 	result, err := runInOrder(runner, executable)
 	if err != nil {
-		os.Exit(1)
+		return 1
 	}
 
 	if !context.reportOnSuccess {
 		fmt.Println("If you'd like to report these " +
 			"results, add the --report flag")
-		return
+		return 1
 	}
 
 	if context.currentStageIndex > 0 {
 		err = runRandomizedMultipleAndLog(runner, executable)
 		if err != nil {
-			os.Exit(1)
+			return 1
 		}
 	}
 
 	if antiCheatRunner().Run(executable).error != nil {
-		os.Exit(1)
+		return 1
 	}
 
 	time.Sleep(1 * time.Second)
 	if report(result, context.apiKey) != nil {
-		os.Exit(1)
+		return 1
 	}
+
+	return 0
 }
 
 func runRandomizedMultipleAndLog(runner StageRunner, executable *Executable) error {
@@ -96,7 +98,7 @@ func runRandomized(runner StageRunner, executable *Executable) error {
 		return fmt.Errorf("error")
 	}
 
-	return ni
+	return nil
 }
 
 func runBinary(binaryPath string, debug bool) (*exec.Cmd, error) {
