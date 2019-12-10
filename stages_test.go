@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	"gotest.tools/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestBasicExec(t *testing.T) {
