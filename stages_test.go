@@ -24,4 +24,14 @@ func TestBasicExec(t *testing.T) {
 	}
 	assert.Contains(t, m.ReadStdout(), "Test failed")
 }
+
+func TestFSIsolation(t *testing.T) {
+	m := NewStdIOMocker()
+	m.Start()
+	defer m.End()
+
+	exitCode := RunCLI([]string{"--binary-path", "./test_helpers/stages/basic_exec_correct.sh", "--stage", "1"})
+	if !assert.Equal(t, exitCode, 1) {
+		t.Error(m.ReadStdout())
+	}
 }

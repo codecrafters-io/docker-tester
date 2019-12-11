@@ -34,6 +34,11 @@ func newStageRunner(isDebug bool) StageRunner {
 				logger:  getLogger(isDebug, "[stage-0] "),
 				runFunc: testBasicExec,
 			},
+			Stage{
+				name:    "Stage 1: Filesystem isolation",
+				logger:  getLogger(isDebug, "[stage-1] "),
+				runFunc: testFSIsolation,
+			},
 		},
 	}
 }
