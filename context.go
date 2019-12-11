@@ -21,33 +21,33 @@ func (c Context) print() {
 	fmt.Println("Stage =", c.currentStageIndex)
 }
 
+var binaryPathPtr = flag.String(
+	"binary-path",
+	"",
+	"path to the executable to test. Ex: ./run_program.sh")
+
+var debugPtr = flag.Bool(
+	"debug",
+	false,
+	"Whether debug logs must be printed")
+
+var apiKeyPtr = flag.String(
+	"api-key",
+	"",
+	"API key to use for reporting test results")
+
+var reportOnSuccessPtr = flag.Bool(
+	"report",
+	false,
+	"Whether test results must be reported")
+
+var currentStagePtr = flag.Int(
+	"stage",
+	0,
+	"The current stage you're on")
+
 // GetContext parses flags and returns a Context object
 func GetContext(args []string) (Context, error) {
-	binaryPathPtr := flag.String(
-		"binary-path",
-		"",
-		"path to the executable to test. Ex: ./run_program.sh")
-
-	debugPtr := flag.Bool(
-		"debug",
-		false,
-		"Whether debug logs must be printed")
-
-	apiKeyPtr := flag.String(
-		"api-key",
-		"",
-		"API key to use for reporting test results")
-
-	reportOnSuccessPtr := flag.Bool(
-		"report",
-		false,
-		"Whether test results must be reported")
-
-	currentStagePtr := flag.Int(
-		"stage",
-		0,
-		"The current stage you're on")
-
 	flag.CommandLine.Parse(args)
 
 	if *binaryPathPtr == "" {
