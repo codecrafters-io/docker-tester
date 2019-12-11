@@ -48,7 +48,7 @@ func assertStdout(result ExecutableResult, expected string) error {
 func assertExitCode(result ExecutableResult, expected int) error {
 	actual := result.ExitCode
 	if expected != actual {
-		return fmt.Errorf("Expected %q as exit code, got: %q", expected, actual)
+		return fmt.Errorf("Expected %d as exit code, got: %d", expected, actual)
 	}
 
 	return nil
