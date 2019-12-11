@@ -9,6 +9,9 @@ type IOMocker struct {
 	originalStdout *os.File
 	originalStderr *os.File
 	originalStdin  *os.File
+	mockedStdout   *os.File
+	mockedStderr   *os.File
+	mockedStdin    *os.File
 }
 
 func NewStdIOMocker() *IOMocker {
@@ -20,9 +23,25 @@ func (m *IOMocker) Start() {
 	m.originalStdin = os.Stdin
 	m.originalStdin = os.Stdin
 
-	os.Stdout, _ = ioutil.TempFile("", "")
-	os.Stdin, _ = ioutil.TempFile("", "")
-	os.Stderr, _ = ioutil.TempFile("", "")
+	m.Reset()
+}
+
+func (m *IOMocker) Reset() {
+	m.mockedStdout, _ = ioutil.TempFile("", "")
+	m.mockedStdin, _ = ioutil.TempFile("", "")
+	m.mockedStderr, _ = ioutil.TempFile("", "")
+
+	os.Stdout = m.mockedStdout
+	os.Stdin = m.mockedStdin
+	os.Stderr = m.mockedStderr
+}
+
+func (m *IOMocker) ReadStdout() string {
+	bytes, err := ioutil.ReadFile(m.mockedStdout.Name())
+	if err != nil {
+		panic(err)
+	}
+	return string(bytes)
 }
 
 func (m *IOMocker) End() {
