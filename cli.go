@@ -39,7 +39,7 @@ func RunCLI(args []string) int {
 	if !context.reportOnSuccess {
 		fmt.Println("If you'd like to report these " +
 			"results, add the --report flag")
-		return 1
+		return 0
 	}
 
 	if context.currentStageIndex > 0 {
