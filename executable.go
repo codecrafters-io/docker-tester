@@ -59,33 +59,36 @@ func (e *Executable) Start(args ...string) error {
 	// TODO: Use timeout!
 	e.cmd = exec.Command(e.path, args...)
 
+	// Setup stdout capture
 	e.stdoutPipe, err = e.cmd.StdoutPipe()
 	if err != nil {
 		return err
 	}
-
 	e.stdoutBytes = []byte{}
 	e.stdoutBuffer = bytes.NewBuffer(e.stdoutBytes)
-	go func() {
-		multiWriter := io.MultiWriter(os.Stdout, e.stdoutBuffer)
-		stdoutEchoer := io.TeeReader(e.stdoutPipe, multiWriter)
-		ioutil.ReadAll(stdoutEchoer)
-	}()
+	e.setupIORelay(e.stdoutPipe, os.Stdout, e.stdoutBuffer)
 
+	// Setup stderr relay
 	e.stderrPipe, err = e.cmd.StderrPipe()
 	if err != nil {
 		return err
 	}
-
 	e.stderrBytes = []byte{}
 	e.stderrBuffer = bytes.NewBuffer(e.stderrBytes)
-	go func() {
-		multiWriter := io.MultiWriter(os.Stderr, e.stderrBuffer)
-		stderrEchoer := io.TeeReader(e.stderrPipe, multiWriter)
-		ioutil.ReadAll(stderrEchoer)
-	}()
+	e.setupIORelay(e.stderrPipe, os.Stderr, e.stderrBuffer)
 
 	return e.cmd.Start()
+}
+
+func (e *Executable) setupIORelay(childReader io.Reader, parentWriter io.Writer, buffer io.Writer) {
+	go func() {
+		writer := buffer
+		if !e.suppressOutput {
+			writer = io.MultiWriter(parentWriter, writer)
+		}
+		ioutil.ReadAll(io.TeeReader(childReader, writer))
+	}()
+
 }
 
 // Run starts the specified command, waits for it to complete and returns the

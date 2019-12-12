@@ -24,6 +24,9 @@ func RunCLI(args []string) int {
 	fmt.Println("")
 
 	executable := NewExecutable(context.binaryPath)
+	if context.isDebug {
+		executable = NewVerboseExecutable(context.binaryPath)
+	}
 
 	// TODO: Signal handlers!
 	// installSignalHandler(cmd)
