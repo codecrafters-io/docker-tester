@@ -1,5 +1,7 @@
 .PHONY: release build run run_with_redis
 
+# Change test to the latest 'correct' binary
+binary_path = ./test_helpers/stages/basic_exec_correct.sh
 current_version = $(shell git describe --tags --abbrev=0)
 
 release:
@@ -10,28 +12,13 @@ build:
 	go build -o dist/main.out
 
 test: build
-	dist/main.out --stage 8 --binary-path=./run_success.sh
-
-test_first_stage: build
-	dist/main.out --binary-path=./run_success.sh
+	dist/main.out --stage 100 --binary-path=$(binary_path)
 
 test_debug: build
-	dist/main.out --stage 8 --binary-path=./test_helpers/stages/basic_exec_correct.sh --debug=true
-
-test_for_failure: build
-	dist/main.out --stage 8 --binary-path=./run_failure.sh
-
-test_with_redis: build
-	dist/main.out --stage 8 --binary-path=redis-server
-
-report_first_stage: build
-	dist/main.out --binary-path=./run_success.sh --report --api-key=abcd
+	dist/main.out --stage 100 --binary-path=$(binary_path) --debug=true
 
 report: build
-	dist/main.out --stage 8 --binary-path=./run_success.sh --report --api-key=abcd
-
-report_with_redis: build
-	dist/main.out --stage 8 --binary-path=redis-server --report --api-key=abcd
+	dist/main.out --stage 100 --binary-path=$(binary_path) --report --api-key=abcd
 
 bump_version:
 	bumpversion --verbose --tag patch
