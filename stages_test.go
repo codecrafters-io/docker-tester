@@ -12,14 +12,14 @@ func TestBasicExec(t *testing.T) {
 	defer m.End()
 
 	exitCode := RunCLI([]string{"--binary-path", "./test_helpers/stages/basic_exec_correct.sh", "--stage", "0"})
-	if !assert.Equal(t, exitCode, 0) {
+	if !assert.Equal(t, 0, exitCode) {
 		t.Error(m.ReadStdout())
 	}
 
 	m.Reset()
 
 	exitCode = RunCLI([]string{"--binary-path", "./test_helpers/stages/basic_exec_wrong.sh", "--stage", "0"})
-	if !assert.Equal(t, exitCode, 1) {
+	if !assert.Equal(t, 1, exitCode) {
 		t.Error(m.ReadStdout())
 	}
 	assert.Contains(t, m.ReadStdout(), "Test failed")
