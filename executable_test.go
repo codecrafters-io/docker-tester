@@ -52,6 +52,9 @@ func TestExitCode(t *testing.T) {
 
 	result, _ = e.Run("1")
 	assert.Equal(t, 1, result.ExitCode)
+
+	result, _ = e.Run("2")
+	assert.Equal(t, 2, result.ExitCode)
 }
 
 func TestExecutableStartNotAllowedIfInProgress(t *testing.T) {
