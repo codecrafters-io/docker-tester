@@ -39,6 +39,11 @@ func newStageRunner(isDebug bool) StageRunner {
 				logger:  getLogger(isDebug, "[stage-1] "),
 				runFunc: testFSIsolation,
 			},
+			Stage{
+				name:    "Stage 2: Process isolation",
+				logger:  getLogger(isDebug, "[stage-2] "),
+				runFunc: testProcessIsolation,
+			},
 		},
 	}
 }
