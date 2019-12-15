@@ -7,7 +7,7 @@ func testProcessIsolation(executable *Executable, logger *customLogger) error {
 		return err
 	}
 
-	if err := assertStdout(result, "1"); err != nil {
+	if err := assertStdout(result, "1\n"); err != nil {
 		return err
 	}
 

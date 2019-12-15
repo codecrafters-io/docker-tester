@@ -41,20 +41,34 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := syscall.Chroot(tempDir); err != nil {
-		fmt.Printf("Chroot Error: %v", err)
+	forkAttr := syscall.ProcAttr{
+		Env: os.Environ(),
+		Sys: &syscall.SysProcAttr{
+			Chroot:     tempDir,
+			Cloneflags: syscall.CLONE_NEWPID,
+		},
+		Files: []uintptr{os.Stdin.Fd(), os.Stdout.Fd(), os.Stderr.Fd()},
+	}
+
+	pid, err := syscall.ForkExec("/usr/bin/"+os.Args[3], os.Args[3:], &forkAttr)
+	if err != nil {
+		fmt.Printf("Fork Error: %v", err)
 		os.Exit(1)
 	}
 
-	if err := syscall.Unshare(syscall.CLONE_NEWPID); err != nil {
-		fmt.Printf("Unshare Error: %v", err)
+	process, err := os.FindProcess(pid)
+	if err != nil {
+		fmt.Printf("FindProcess Error: %v", err)
 		os.Exit(1)
 	}
 
-	if err := syscall.Exec("/usr/bin/"+os.Args[3], os.Args[3:], os.Environ()); err != nil {
-		fmt.Printf("Exec Error: %v", err)
+	state, err := process.Wait()
+	if err != nil {
+		fmt.Printf("ProcessWait Error: %v", err)
 		os.Exit(1)
 	}
+
+	os.Exit(state.ExitCode())
 }
 
 func copyExecutable(src string, dest string) error {
