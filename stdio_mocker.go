@@ -44,6 +44,14 @@ func (m *IOMocker) ReadStdout() string {
 	return string(bytes)
 }
 
+func (m *IOMocker) ReadStderr() string {
+	bytes, err := ioutil.ReadFile(m.mockedStderr.Name())
+	if err != nil {
+		panic(err)
+	}
+	return string(bytes)
+}
+
 func (m *IOMocker) End() {
 	m.originalStdout = os.Stdout
 	m.originalStdin = os.Stdin
