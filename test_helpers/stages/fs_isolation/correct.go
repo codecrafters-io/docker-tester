@@ -21,12 +21,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = os.Mkdir(tempDir+"/usr", os.ModeDir); err != nil {
-		fmt.Printf("Mkdir error: %v", err)
-		os.Exit(1)
-	}
-
-	if err = os.Mkdir(tempDir+"/usr/bin", os.ModeDir); err != nil {
+	if err = os.MkdirAll(tempDir+"/usr/bin", os.ModeDir); err != nil {
 		fmt.Printf("Mkdir error: %v", err)
 		os.Exit(1)
 	}
