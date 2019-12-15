@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"syscall"
@@ -30,12 +31,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := os.Symlink("/usr/bin/echo", tempDir+"/usr/bin/echo"); err != nil {
-		fmt.Printf("Symlink Error: %v", err)
+	if err := copyExecutable("/usr/bin/explore", tempDir+"/usr/bin/explore"); err != nil {
+		fmt.Printf("Copy Executable Error: %v", err)
 		os.Exit(1)
 	}
 
-	fmt.Println(tempDir)
+	if err := copyExecutable("/usr/bin/say", tempDir+"/usr/bin/say"); err != nil {
+		fmt.Printf("Copy Executable Error: %v", err)
+		os.Exit(1)
+	}
 
 	if err := syscall.Chroot(tempDir); err != nil {
 		fmt.Printf("Chroot Error: %v", err)
@@ -46,4 +50,25 @@ func main() {
 		fmt.Printf("Exec Error: %v", err)
 		os.Exit(1)
 	}
+}
+
+func copyExecutable(src string, dest string) error {
+	from, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer from.Close()
+
+	to, err := os.OpenFile(dest, os.O_RDWR|os.O_CREATE, 0755)
+	if err != nil {
+		return err
+	}
+	defer to.Close()
+
+	_, err = io.Copy(to, from)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
