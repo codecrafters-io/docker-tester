@@ -2,7 +2,7 @@ package main
 
 func testBasicExec(executable *Executable, logger *customLogger) error {
 	logger.Debugf("Executing 'echo foo'")
-	result, err := executable.Run("run", "alpine", "echo", "foo")
+	result, err := executable.Run("run", DOCKER_IMAGE_STAGE_1, "say", "foo")
 	if err != nil {
 		return err
 	}
@@ -12,32 +12,12 @@ func testBasicExec(executable *Executable, logger *customLogger) error {
 	}
 
 	logger.Debugf("Executing 'echo bar'")
-	result, err = executable.Run("run", "alpine", "echo", "bar")
+	result, err = executable.Run("run", DOCKER_IMAGE_STAGE_1, "say", "bar")
 	if err != nil {
 		return err
 	}
 
 	if err = assertStdout(result, "bar\n"); err != nil {
-		return err
-	}
-
-	logger.Debugf("Executing 'exit 1'")
-	result, err = executable.Run("run", "alpine", "sh", "-c", "exit 1")
-	if err != nil {
-		return err
-	}
-
-	if err = assertExitCode(result, 1); err != nil {
-		return err
-	}
-
-	logger.Debugf("Executing 'exit 2'")
-	result, err = executable.Run("run", "alpine", "sh", "-c", "exit 2")
-	if err != nil {
-		return err
-	}
-
-	if err = assertExitCode(result, 2); err != nil {
 		return err
 	}
 

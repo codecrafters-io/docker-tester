@@ -8,8 +8,8 @@ import (
 
 func main() {
 	// TODO: Actually run an image!
-	if os.Args[1] != "run" || os.Args[2] != "alpine" {
-		fmt.Printf("Expected 'run alpine <command>' as the command! args: %q\n", os.Args[1:])
+	if os.Args[1] != "run" || os.Args[2] != "codecraftersio/docker-challenge-1" {
+		fmt.Printf("Expected 'run <image> <command>' as the command! args: %q\n", os.Args[1:])
 		os.Exit(1)
 	}
 
