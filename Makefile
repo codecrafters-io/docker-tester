@@ -31,4 +31,11 @@ upload_to_travis:
 		s3://paul-redis-challenge/binaries/$(current_version)/$(current_version)_darwin_amd64.tar.gz \
 		s3://paul-redis-challenge/darwin.tar.gz
 
+setup_local_registry:
+	-docker rm -f fake-registry
+	docker run -d --name=fake-registry -p 5000:5000 registry:2.7.1
+	echo "Assuming that alpine:3.10.3 exists locally.."
+	docker tag alpine:3.10.3 localhost:5000/alpine:3.10.3
+	docker push localhost:5000/alpine:3.10.3
+
 bump_release_upload: bump_version release upload_to_travis

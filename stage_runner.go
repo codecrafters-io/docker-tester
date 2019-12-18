@@ -44,6 +44,11 @@ func newStageRunner(isDebug bool) StageRunner {
 				logger:  getLogger(isDebug, "[stage-2] "),
 				runFunc: testProcessIsolation,
 			},
+			Stage{
+				name:    "Stage 3: Fetching images from a registry",
+				logger:  getLogger(isDebug, "[stage-3] "),
+				runFunc: testFetchFromRegistry,
+			},
 		},
 	}
 }
