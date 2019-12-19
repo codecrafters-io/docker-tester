@@ -34,8 +34,8 @@ upload_to_travis:
 setup_local_registry:
 	-docker rm -f fake-registry
 	docker run -d --name=fake-registry -p 5000:5000 registry:2.7.1
-	echo "Assuming that alpine:3.10.3 exists locally.."
-	docker tag alpine:3.10.3 localhost:5000/alpine:3.10.3
-	docker push localhost:5000/alpine:3.10.3
+	echo "Assuming that docker-challenge-1:v9 exists locally.."
+	docker tag codecraftersio/docker-challenge-1:v9 localhost:5000/codecraftersio/docker-challenge-1:v9
+	docker push localhost:5000/docker-challenge-1:v9
 
 bump_release_upload: bump_version release upload_to_travis
