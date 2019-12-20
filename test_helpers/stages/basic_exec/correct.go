@@ -13,7 +13,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := syscall.Exec("/usr/bin/"+os.Args[3], os.Args[3:], os.Environ()); err != nil {
+	if err := syscall.Exec(os.Args[3], os.Args[3:], os.Environ()); err != nil {
 		fmt.Printf("Error: %v", err)
 		os.Exit(1)
 	}

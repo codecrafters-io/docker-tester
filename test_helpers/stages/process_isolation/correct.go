@@ -26,17 +26,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := copyExecutable("/usr/bin/explore", tempDir+"/usr/bin/explore"); err != nil {
-		fmt.Printf("Copy Executable Error: %v", err)
-		os.Exit(1)
-	}
+	src := "/usr/bin/docker-explorer"
+	dest := tempDir + "/usr/bin/docker-explorer"
 
-	if err := copyExecutable("/usr/bin/say", tempDir+"/usr/bin/say"); err != nil {
-		fmt.Printf("Copy Executable Error: %v", err)
-		os.Exit(1)
-	}
-
-	if err := copyExecutable("/usr/bin/mypid", tempDir+"/usr/bin/mypid"); err != nil {
+	if err := copyExecutable(src, dest); err != nil {
 		fmt.Printf("Copy Executable Error: %v", err)
 		os.Exit(1)
 	}
@@ -50,7 +43,7 @@ func main() {
 		Files: []uintptr{os.Stdin.Fd(), os.Stdout.Fd(), os.Stderr.Fd()},
 	}
 
-	pid, err := syscall.ForkExec("/usr/bin/"+os.Args[3], os.Args[3:], &forkAttr)
+	pid, err := syscall.ForkExec(os.Args[3], os.Args[3:], &forkAttr)
 	if err != nil {
 		fmt.Printf("Fork Error: %v", err)
 		os.Exit(1)

@@ -5,7 +5,10 @@ import "strings"
 func testFetchFromRegistry(executable *Executable, logger *customLogger) error {
 	logger.Debugln("Running 'ls' using an alpine image")
 
-	result, err := executable.Run("run", "alpine:3.10.3", "/bin/sh", "-c", "ls")
+	result, err := executable.Run(
+		"run", DOCKER_IMAGE_STAGE_1,
+		"/bin/sh", "-c", "/bin/ls /",
+	)
 	if err != nil {
 		return err
 	}
@@ -34,7 +37,7 @@ func testFetchFromRegistry(executable *Executable, logger *customLogger) error {
 		"var",
 	}, "\n")
 
-	if err := assertStdout(result, expectedStdout); err != nil {
+	if err := assertStdout(result, expectedStdout+"\n"); err != nil {
 		return err
 	}
 

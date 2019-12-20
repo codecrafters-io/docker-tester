@@ -13,7 +13,10 @@ func testFSIsolation(executable *Executable, logger *customLogger) error {
 	logger.Debugf("Created temp dir on host: %v", tempDir)
 	logger.Debugf("Executing 'explore' in %v", tempDir)
 
-	result, err := executable.Run("run", DOCKER_IMAGE_STAGE_1, "explore", tempDir)
+	result, err := executable.Run(
+		"run", DOCKER_IMAGE_STAGE_1,
+		"/usr/bin/docker-explorer", "ls", tempDir,
+	)
 	if err != nil {
 		return err
 	}

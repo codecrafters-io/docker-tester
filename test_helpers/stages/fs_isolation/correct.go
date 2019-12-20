@@ -26,12 +26,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := copyExecutable("/usr/bin/explore", tempDir+"/usr/bin/explore"); err != nil {
-		fmt.Printf("Copy Executable Error: %v", err)
-		os.Exit(1)
-	}
+	src := "/usr/bin/docker-explorer"
+	dest := tempDir + "/usr/bin/docker-explorer"
 
-	if err := copyExecutable("/usr/bin/say", tempDir+"/usr/bin/say"); err != nil {
+	if err := copyExecutable(src, dest); err != nil {
 		fmt.Printf("Copy Executable Error: %v", err)
 		os.Exit(1)
 	}
@@ -41,7 +39,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := syscall.Exec("/usr/bin/"+os.Args[3], os.Args[3:], os.Environ()); err != nil {
+	if err := syscall.Exec(os.Args[3], os.Args[3:], os.Environ()); err != nil {
 		fmt.Printf("Exec Error: %v", err)
 		os.Exit(1)
 	}

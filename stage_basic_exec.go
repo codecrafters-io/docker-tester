@@ -2,7 +2,10 @@ package main
 
 func testBasicExec(executable *Executable, logger *customLogger) error {
 	logger.Debugf("Executing 'echo foo'")
-	result, err := executable.Run("run", DOCKER_IMAGE_STAGE_1, "/bin/echo", "foo")
+	result, err := executable.Run(
+		"run", DOCKER_IMAGE_STAGE_1,
+		"/usr/bin/docker-explorer", "echo", "foo",
+	)
 	if err != nil {
 		return err
 	}
@@ -12,7 +15,10 @@ func testBasicExec(executable *Executable, logger *customLogger) error {
 	}
 
 	logger.Debugf("Executing 'echo bar'")
-	result, err = executable.Run("run", DOCKER_IMAGE_STAGE_1, "/bin/echo", "bar")
+	result, err = executable.Run(
+		"run", DOCKER_IMAGE_STAGE_1,
+		"/usr/bin/docker-explorer", "echo", "bar",
+	)
 	if err != nil {
 		return err
 	}

@@ -24,7 +24,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = downloadImageToPath("alpine", "3.10.3", tempDir); err != nil {
+	if err = downloadImageToPath(os.Args[2], tempDir); err != nil {
 		fmt.Printf("Download Error: %v", err)
 		os.Exit(1)
 	}
@@ -59,11 +59,15 @@ func main() {
 	os.Exit(state.ExitCode())
 }
 
-func downloadImageToPath(image string, tag string, path string) error {
-	url := fmt.Sprintf("http://localhost:5000/v2/%s/manifests/%s", image, tag)
+func downloadImageToPath(image string, path string) error {
+	url := fmt.Sprintf("http://localhost:5000/v2/%s/manifests/latest", image)
 	resp, err := http.Get(url)
 	if err != nil {
 		return err
+	}
+
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("Expected 200, got: %d", resp.StatusCode)
 	}
 
 	bytes, err := ioutil.ReadAll(resp.Body)
@@ -93,6 +97,11 @@ func downloadLayerToPath(image string, digest string, path string) error {
 	if err != nil {
 		return err
 	}
+
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("Expected 200, got: %d", resp.StatusCode)
+	}
+
 	tmpFile, err := ioutil.TempFile("", "*.tar.gz")
 	if err != nil {
 		return err
