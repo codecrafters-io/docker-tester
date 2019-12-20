@@ -13,8 +13,28 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := syscall.Exec(os.Args[3], os.Args[3:], os.Environ()); err != nil {
-		fmt.Printf("Error: %v", err)
+	forkAttr := syscall.ProcAttr{
+		Env:   os.Environ(),
+		Files: []uintptr{os.Stdin.Fd(), os.Stdout.Fd(), os.Stderr.Fd()},
+	}
+
+	pid, err := syscall.ForkExec(os.Args[3], os.Args[3:], &forkAttr)
+	if err != nil {
+		fmt.Printf("Fork Error: %v", err)
 		os.Exit(1)
 	}
+
+	process, err := os.FindProcess(pid)
+	if err != nil {
+		fmt.Printf("FindProcess Error: %v", err)
+		os.Exit(1)
+	}
+
+	state, err := process.Wait()
+	if err != nil {
+		fmt.Printf("ProcessWait Error: %v", err)
+		os.Exit(1)
+	}
+
+	os.Exit(state.ExitCode())
 }
