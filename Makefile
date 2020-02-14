@@ -1,7 +1,7 @@
 .PHONY: release build run run_with_redis
 
 # Change test to the latest 'correct' binary
-binary_path = ./test_helpers/stages/basic_exec_correct.sh
+binary_path = ./test_helpers/stages/fetch_from_registry/correct.sh
 current_version = $(shell git describe --tags --abbrev=0)
 
 release:

@@ -7,10 +7,13 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 	"syscall"
 
 	"github.com/mholt/archiver/v3"
 )
+
+var REGISTRY_BASE_URL = "https://registry.hub.docker.com"
 
 func main() {
 	if os.Args[1] != "run" {
@@ -24,7 +27,17 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = downloadImageToPath(os.Args[2], tempDir); err != nil {
+	var imageName = os.Args[2]
+	var command = os.Args[3]
+	var commandArgs = os.Args[3:]
+
+	token, err := fetchToken(imageName)
+	if err != nil {
+		fmt.Printf("Token fetch failure: %v", err)
+		os.Exit(1)
+	}
+
+	if err = downloadImageToPath(imageName, token, tempDir); err != nil {
 		fmt.Printf("Download Error: %v", err)
 		os.Exit(1)
 	}
@@ -38,7 +51,7 @@ func main() {
 		Files: []uintptr{os.Stdin.Fd(), os.Stdout.Fd(), os.Stderr.Fd()},
 	}
 
-	pid, err := syscall.ForkExec(os.Args[3], os.Args[3:], &forkAttr)
+	pid, err := syscall.ForkExec(command, commandArgs, &forkAttr)
 	if err != nil {
 		fmt.Printf("Fork Error: %v", err)
 		os.Exit(1)
@@ -59,20 +72,68 @@ func main() {
 	os.Exit(state.ExitCode())
 }
 
-func downloadImageToPath(image string, path string) error {
-	url := fmt.Sprintf("http://localhost:5000/v2/%s/manifests/latest", image)
+func fetchToken(image string) (string, error) {
+	url := fmt.Sprintf(REGISTRY_BASE_URL+"/v2/%s/manifests/latest", image)
 	resp, err := http.Get(url)
 	if err != nil {
-		return err
+		return "", err
+	}
+
+	if resp.StatusCode != 401 {
+		return "", fmt.Errorf("Expected 401, got: %d", resp.StatusCode)
+	}
+
+	var headerValue = resp.Header.Get("Www-Authenticate")
+	if !strings.HasPrefix(headerValue, "Bearer realm") {
+		return "", fmt.Errorf("Expected valid auth header, got: %d", headerValue)
+	}
+
+	var headerSplit = strings.SplitN(headerValue, "\"", -1)
+	var realm, service, scope = headerSplit[1], headerSplit[3], headerSplit[5]
+	var authUrl = fmt.Sprintf("%s?service=%s&scope=%s", realm, service, scope)
+
+	resp, err = http.Get(authUrl)
+	if err != nil {
+		return "", err
 	}
 
 	if resp.StatusCode != 200 {
-		return fmt.Errorf("Expected 200, got: %d", resp.StatusCode)
+		return "", fmt.Errorf("Expected 200, got: %d", resp.StatusCode)
+	}
+
+	bytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	var result map[string]interface{}
+	if err = json.Unmarshal(bytes, &result); err != nil {
+		return "", err
+	}
+	return result["token"].(string), nil
+}
+
+func downloadImageToPath(image string, token string, path string) error {
+	url := fmt.Sprintf(REGISTRY_BASE_URL+"/v2/%s/manifests/latest", image)
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Add("Authorization", "Bearer "+token)
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
 	}
 
 	bytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return err
+	}
+
+	if resp.StatusCode != 200 {
+		fmt.Println(string(bytes))
+		return fmt.Errorf("Expected 200, got: %d", resp.StatusCode)
 	}
 
 	var result map[string]interface{}
@@ -83,7 +144,7 @@ func downloadImageToPath(image string, path string) error {
 	// TODO: Cleanup JSON parsing
 	for _, layer := range result["fsLayers"].([]interface{}) {
 		digest := layer.(map[string]interface{})["blobSum"].(string)
-		if err = downloadLayerToPath(image, digest, path); err != nil {
+		if err = downloadLayerToPath(token, image, digest, path); err != nil {
 			return err
 		}
 	}
@@ -91,9 +152,15 @@ func downloadImageToPath(image string, path string) error {
 	return nil
 }
 
-func downloadLayerToPath(image string, digest string, path string) error {
-	url := fmt.Sprintf("http://localhost:5000/v2/%s/blobs/%s", image, digest)
-	resp, err := http.Get(url)
+func downloadLayerToPath(token string, image string, digest string, path string) error {
+	url := fmt.Sprintf(REGISTRY_BASE_URL+"/v2/%s/blobs/%s", image, digest)
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Add("Authorization", "Bearer "+token)
+	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}
