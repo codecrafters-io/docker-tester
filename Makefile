@@ -1,41 +1,14 @@
-.PHONY: release build run run_with_redis
+.PHONY: release build run
 
-# Change test to the latest 'correct' binary
-binary_path = ./test_helpers/stages/fetch_from_registry/correct.sh
-current_version = $(shell git describe --tags --abbrev=0)
+current_version_number := $(shell git tag --list "v*" | sort -V | tail -n 1 | cut -c 2-)
+next_version_number := $(shell echo $$(($(current_version_number)+1)))
 
 release:
-	rm -rf dist
-	goreleaser
+	git tag v$(next_version_number)
+	git push origin master v$(next_version_number)
 
 build:
 	go build -o dist/main.out
 
-test: build
-	dist/main.out --stage 100 --binary-path=$(binary_path)
-
-test_debug: build
-	dist/main.out --stage 100 --binary-path=$(binary_path) --debug=true
-
-report: build
-	dist/main.out --stage 100 --binary-path=$(binary_path) --report --api-key=abcd
-
-bump_version:
-	bumpversion --verbose --tag patch
-
-upload_to_travis:
-	aws s3 cp --acl public-read \
-		s3://paul-redis-challenge/binaries/$(current_version)/$(current_version)_linux_amd64.tar.gz \
-		s3://paul-redis-challenge/linux.tar.gz
-	aws s3 cp --acl public-read \
-		s3://paul-redis-challenge/binaries/$(current_version)/$(current_version)_darwin_amd64.tar.gz \
-		s3://paul-redis-challenge/darwin.tar.gz
-
-setup_local_registry:
-	-docker rm -f fake-registry
-	docker run -d --name=fake-registry -p 5000:5000 registry:2.7.1
-	echo "Assuming that docker-challenge-1:v9 exists locally.."
-	docker tag codecraftersio/docker-challenge-1:v9 localhost:5000/codecraftersio/docker-challenge-1:latest
-	docker push localhost:5000/codecraftersio/docker-challenge-1:latest
-
-bump_release_upload: bump_version release upload_to_travis
+test:
+	go test -v
