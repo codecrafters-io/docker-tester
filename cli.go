@@ -10,11 +10,11 @@ import (
 )
 
 // RunCLI executes the CLI program with given flags, and returns the exit code
-func RunCLI(args []string) int {
+func RunCLI(envMap map[string]string) int {
 	fmt.Println("Welcome to the docker challenge!")
 	fmt.Println("")
 
-	context, err := GetContext(args)
+	context, err := GetContext(envMap)
 	if err != nil {
 		fmt.Printf("%s", err)
 		return 1
@@ -34,15 +34,9 @@ func RunCLI(args []string) int {
 	runner := newStageRunner(context.isDebug)
 	runner = runner.Truncated(context.currentStageIndex)
 
-	result, err := runInOrder(runner, executable)
+	_, err = runInOrder(runner, executable)
 	if err != nil {
 		return 1
-	}
-
-	if !context.reportOnSuccess {
-		fmt.Println("If you'd like to report these " +
-			"results, add the --report flag")
-		return 0
 	}
 
 	if context.currentStageIndex > 0 {
@@ -53,11 +47,6 @@ func RunCLI(args []string) int {
 	}
 
 	if antiCheatRunner().Run(executable).error != nil {
-		return 1
-	}
-
-	time.Sleep(1 * time.Second)
-	if report(result, context.apiKey) != nil {
 		return 1
 	}
 
