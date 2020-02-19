@@ -29,14 +29,14 @@ func RunCLI(envMap map[string]string) int {
 	// installSignalHandler(cmd)
 
 	runner := newStageRunner(context.isDebug)
-	runner = runner.Truncated(context.currentStageIndex)
+	runner = runner.Truncated(context.currentStageSlug)
 
 	_, err = runInOrder(runner, executable)
 	if err != nil {
 		return 1
 	}
 
-	if context.currentStageIndex > 0 {
+	if runner.StageCount() > 1 {
 		err = runRandomizedMultipleAndLog(runner, executable)
 		if err != nil {
 			return 1

@@ -30,21 +30,25 @@ func newStageRunner(isDebug bool) StageRunner {
 		isDebug: isDebug,
 		stages: []Stage{
 			Stage{
+				slug:    "init",
 				name:    "Stage 0: Execute a program",
 				logger:  getLogger(isDebug, "[stage-0] "),
 				runFunc: testBasicExec,
 			},
 			Stage{
+				slug:    "fs_isolation",
 				name:    "Stage 1: Filesystem isolation",
 				logger:  getLogger(isDebug, "[stage-1] "),
 				runFunc: testFSIsolation,
 			},
 			Stage{
+				slug:    "process_isolation",
 				name:    "Stage 2: Process isolation",
 				logger:  getLogger(isDebug, "[stage-2] "),
 				runFunc: testProcessIsolation,
 			},
 			Stage{
+				slug:    "fetch_from_registry",
 				name:    "Stage 3: Fetching images from a registry",
 				logger:  getLogger(isDebug, "[stage-3] "),
 				runFunc: testFetchFromRegistry,
@@ -90,18 +94,24 @@ func (r StageRunner) Run(executable *Executable) StageRunnerResult {
 	}
 }
 
+func (r StageRunner) StageCount() int {
+	return len(r.stages)
+}
+
 // Truncated returns a stageRunner with fewer stages
-func (r StageRunner) Truncated(stageIndex int) StageRunner {
-	maxStageIndex := min(stageIndex, len(r.stages)-1)
-	newStages := make([]Stage, maxStageIndex+1)
-	for i := 0; i <= maxStageIndex; i++ {
-		newStages[i] = r.stages[i]
+func (r StageRunner) Truncated(stageSlug string) StageRunner {
+	newStages := make([]Stage, 0)
+	for _, stage := range r.stages {
+		newStages = append(newStages, stage)
+		if stage.slug == stageSlug {
+			return StageRunner{
+				isDebug: r.isDebug,
+				stages:  newStages,
+			}
+		}
 	}
 
-	return StageRunner{
-		isDebug: r.isDebug,
-		stages:  newStages,
-	}
+	panic(fmt.Sprintf("Stage slug %v not found. Stages: %v", stageSlug, r.stages))
 }
 
 // Fuck you, go
@@ -142,8 +152,8 @@ func reportTestError(err error, isDebug bool, logger *customLogger) {
 
 // Stage is blah
 type Stage struct {
-	name        string
-	description string
-	runFunc     func(executable *Executable, logger *customLogger) error
-	logger      *customLogger
+	slug    string
+	name    string
+	runFunc func(executable *Executable, logger *customLogger) error
+	logger  *customLogger
 }

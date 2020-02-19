@@ -12,14 +12,16 @@ func TestBasicExec(t *testing.T) {
 	m.Start()
 	defer m.End()
 
-	exitCode := runCLIStage("./test_helpers/stages/basic_exec_success")
+	fmt.Println("Test success")
+	exitCode := runCLIStage("init", "./test_helpers/stages/basic_exec_success")
 	if !assert.Equal(t, 0, exitCode) {
 		failWithMockerOutput(t, m)
 	}
 
 	m.Reset()
 
-	exitCode = runCLIStage("./test_helpers/stages/basic_exec_failure")
+	fmt.Println("Test failure")
+	exitCode = runCLIStage("init", "./test_helpers/stages/basic_exec_failure")
 	if !assert.Equal(t, 1, exitCode) {
 		failWithMockerOutput(t, m)
 	}
@@ -86,9 +88,10 @@ func TestBasicExec(t *testing.T) {
 // 	}
 // }
 
-func runCLIStage(path string) (exitCode int) {
+func runCLIStage(slug string, path string) (exitCode int) {
 	return RunCLI(map[string]string{
-		"APP_DIR": path,
+		"CODECRAFTERS_CURRENT_STAGE_SLUG": slug,
+		"CODECRAFTERS_SUBMISSION_DIR":     path,
 	})
 }
 
