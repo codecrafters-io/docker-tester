@@ -15,7 +15,7 @@ func testFSIsolation(executable *Executable, logger *customLogger) error {
 
 	result, err := executable.Run(
 		"run", DOCKER_IMAGE_STAGE_1,
-		"/usr/bin/docker-explorer", "ls", tempDir,
+		"/usr/local/bin/docker-explorer", "ls", tempDir,
 	)
 	if err != nil {
 		return err

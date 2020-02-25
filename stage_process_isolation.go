@@ -4,7 +4,7 @@ func testProcessIsolation(executable *Executable, logger *customLogger) error {
 	logger.Debugln("Running 'mypid'")
 	result, err := executable.Run(
 		"run", DOCKER_IMAGE_STAGE_1,
-		"/usr/bin/docker-explorer", "mypid",
+		"/usr/local/bin/docker-explorer", "mypid",
 	)
 	if err != nil {
 		return err
