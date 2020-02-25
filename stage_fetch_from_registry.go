@@ -6,7 +6,7 @@ func testFetchFromRegistry(executable *Executable, logger *customLogger) error {
 	logger.Debugln("Running 'ls' using an alpine image")
 
 	result, err := executable.Run(
-		"run", DOCKER_IMAGE_STAGE_1,
+		"run", "alpine",
 		"/bin/sh", "-c", "/bin/ls /",
 	)
 	if err != nil {
