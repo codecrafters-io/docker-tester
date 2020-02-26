@@ -6,7 +6,6 @@ import (
 	"os/exec"
 
 	"syscall"
-	"time"
 )
 
 // RunCLI executes the CLI program with given flags, and returns the exit code
@@ -36,37 +35,11 @@ func RunCLI(envMap map[string]string) int {
 		return 1
 	}
 
-	if runner.StageCount() > 1 {
-		err = runRandomizedMultipleAndLog(runner, executable)
-		if err != nil {
-			return 1
-		}
-	}
-
 	if antiCheatRunner().Run(executable).error != nil {
 		return 1
 	}
 
 	return 0
-}
-
-func runRandomizedMultipleAndLog(runner StageRunner, executable *Executable) error {
-	fmt.Println("Running tests multiple times to make sure...")
-
-	fmt.Println("")
-	time.Sleep(1 * time.Second)
-
-	for i := 1; i <= 5; i++ {
-		fmt.Printf("%d...\n\n", i)
-		time.Sleep(1 * time.Second)
-		err := runRandomized(runner, executable)
-		if err != nil {
-			return err
-		}
-		fmt.Println("")
-	}
-
-	return nil
 }
 
 func runInOrder(runner StageRunner, executable *Executable) (StageRunnerResult, error) {
