@@ -43,8 +43,8 @@ stages:
       (This is supposed to mimic the `docker run` command)
 
       Don't worry about pulling a docker image for now, just execute a program
-      on your local machine. In this stage, the tester will use
-      `/usr/local/bin/docker-explorer` as the command.
+      on your local machine and print its output. In this stage, the tester will
+      use `/usr/local/bin/docker-explorer` as the command.
 
       We'd like to make the first stage easy to pass, so we've included steps on
       how to pass this stage in the readme.
