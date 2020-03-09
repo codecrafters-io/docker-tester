@@ -12,3 +12,10 @@ build:
 
 test:
 	go test -v
+
+copy_course_file:
+	hub api \
+		repos/rohitpaulk/codecrafters-server/contents/codecrafters/store/data/docker.yml \
+		| jq -r .content \
+		| base64 -d \
+		> test_helpers/course_definition.yml

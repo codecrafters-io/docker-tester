@@ -1,0 +1,134 @@
+slug: "docker"
+name: "Docker"
+description_md: |
+  In this challenge, you'll build a toy Docker implementation that can pull an
+  image from [Docker Hub](https://hub.docker.com/) and execute commands in it.
+  Along the way, you'll learn about
+  [chroot](https://en.wikipedia.org/wiki/Chroot), [kernel
+  namespaces](https://en.wikipedia.org/wiki/Linux_namespaces), the [docker
+  registry API](https://docs.docker.com/registry/spec/api/) and much more.
+
+supported_languages: ["go"]
+starter_repos:
+  go: https://github.com/codecrafters-io/docker-starter-golang
+  
+marketing_intro_md: |
+  In this challenge, you'll build a toy Docker implementation that can pull an
+  image from [Docker Hub](https://hub.docker.com/) and execute commands in it.
+  Along the way, you'll learn about
+  [chroot](https://en.wikipedia.org/wiki/Chroot), [kernel
+  namespaces](https://en.wikipedia.org/wiki/Linux_namespaces), the [docker
+  registry API](https://docs.docker.com/registry/spec/api/) and much more.
+
+stages:
+  - slug: "init"
+    name: "Execute a program"
+    description_md: |
+      In the first couple of stages of this challenge, you'll be using
+      [`docker-explorer`](https://github.com/codecrafters-io/docker-explorer), a
+      custom test program that exposes a few commands like `echo` and `ls`.
+
+      [Follow the instructions
+      here](https://github.com/codecrafters-io/docker-explorer) to download the
+      program to your machine. The program must be accessible at
+      `/usr/local/bin/docker-explorer`.
+
+      In the first stage, your task is to implement a very basic version of `docker
+      run` that will be executed like this:
+
+      ```
+      your_program run <some_image> <command> <arg1> <arg2>
+      ```
+
+      (This is supposed to mimic the `docker run` command)
+
+      Don't worry about pulling a docker image for now, just execute a program
+      on your local machine and return its output. In this stage, the tester
+      will use `/usr/local/bin/docker-explorer` as the command.
+
+      We'd like to make the first stage easy to pass, so we've included steps on
+      how to pass this stage in the readme.
+
+    marketing_md: |
+      In this stage, you'll execute a program using `fork` + `exec` and relay
+      its stdout, stderr and exit code to the parent process.
+
+  - slug: "fs_isolation"
+    name: "Filesystem isolation"
+    description_md: |
+      In the previous stage, we executed a program that existed locally on our
+      machine. This program had write access to the whole filesystem, which
+      means that it could do **dangerous** things!
+
+      In this stage, you'll use [chroot](https://en.wikipedia.org/wiki/Chroot)
+      to ensure that the program you execute doesn't have access to any files on
+      the host machine. Create an empty temporary directory and `chroot` into it
+      when executing the command. You'll need to copy the binary being executed
+      too.
+
+      Just like the previous stage, the tester will run your program like this: 
+
+      ```
+      your_program run <some_image> <command> <arg1> <arg2>
+      ```
+
+    marketing_md: |
+      In this stage, you'll restrict a program's access to the host filesystem
+      by using [chroot](https://en.wikipedia.org/wiki/Chroot).
+
+  - slug: "process_isolation"
+    name: "Process isolation"
+    description_md: |
+      In the previous stage, we guarded against malicious activity by
+      restricting an executable's access to the filesystem. 
+
+      There's another resource that needs to be guarded: the process tree. The
+      process you're executing is currently capable of viewing all other
+      processes running on the host system, and sending signals to them.
+
+      In this stage, you'll use [PID
+      namespaces](http://man7.org/linux/man-pages/man7/pid_namespaces.7.html) to
+      ensure that the program you execute has its own isolated process tree.
+      The process being executed must see itself as PID 1.
+
+      Just like the previous stage, the tester will run your program like this: 
+
+      ```
+      your_program run <some_image> <command> <arg1> <arg2>
+      ```
+
+    marketing_md: |
+      In this stage, you'll restrict a program's access to the host's process
+      tree by using [PID
+      namespaces](http://man7.org/linux/man-pages/man7/pid_namespaces.7.html).
+
+  - slug: "fetch_from_registry"
+    name: "Fetch an image from the Docker Registry"
+    description_md: |
+      Your docker implementation can now execute a program with a fair degree of
+      isolation - it can't modify files or interact with processes running on
+      the host.
+
+      In this stage, you'll use [the Docker registry
+      API](https://docs.docker.com/registry/spec/api/) to fetch the contents of
+      image and then execute a command within it.
+
+      Just like the previous stage, the tester will run your program like this: 
+
+      ```
+      your_program run <some_image> <command> <arg1> <arg2>
+      ```
+
+      You'll need to:
+
+      - Do a small authentication dance with the [registry API](https://docs.docker.com/registry/spec/api/)
+      - Fetch the [image manifest](https://docs.docker.com/registry/spec/api/#pulling-an-image-manifest)
+      - [Pull layers](https://docs.docker.com/registry/spec/api/#pulling-a-layer) of an image and extract them to the chroot directory
+
+      Since Go doesn't have archive extraction in its stdlib, you might want to
+      shell out and use `tar`. 
+
+    marketing_md: |
+      In this stage, you'll fetch an image from Docker Hub and execute a command
+      in it. You'll need to use [the Docker Registry
+      API](https://docs.docker.com/registry/spec/api/) for this.
