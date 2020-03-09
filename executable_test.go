@@ -44,7 +44,7 @@ func TestOutputCapture(t *testing.T) {
 	assert.Equal(t, string(result.Stderr), "hey\n")
 }
 
-func TestExitCode(t *testing.T) {
+func TestExecutableExitCode(t *testing.T) {
 	e := NewExecutable("./test_helpers/executable_test/exit_with.sh")
 
 	result, _ := e.Run("0")

@@ -36,6 +36,18 @@ func newStageRunner(isDebug bool) StageRunner {
 				runFunc: testBasicExec,
 			},
 			Stage{
+				slug:    "stdio",
+				name:    "Stage 1: Wireup stdout & stderr",
+				logger:  getLogger(isDebug, "[stage-1] "),
+				runFunc: testStdio,
+			},
+			Stage{
+				slug:    "exit_code",
+				name:    "Stage 1: Handle exit codes",
+				logger:  getLogger(isDebug, "[stage-1] "),
+				runFunc: testExitCode,
+			},
+			Stage{
 				slug:    "fs_isolation",
 				name:    "Stage 1: Filesystem isolation",
 				logger:  getLogger(isDebug, "[stage-1] "),

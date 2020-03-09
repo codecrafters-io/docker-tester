@@ -15,7 +15,7 @@ func main() {
 
 	forkAttr := syscall.ProcAttr{
 		Env:   os.Environ(),
-		Files: []uintptr{os.Stdout.Fd(), os.Stdout.Fd(), os.Stdout.Fd()},
+		Files: []uintptr{os.Stdin.Fd(), os.Stdout.Fd(), os.Stderr.Fd()},
 	}
 
 	pid, err := syscall.ForkExec(os.Args[3], os.Args[3:], &forkAttr)

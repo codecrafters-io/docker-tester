@@ -1,31 +1,22 @@
 package main
 
+import (
+	"math/rand"
+	"strconv"
+)
+
 func testBasicExec(executable *Executable, logger *customLogger) error {
-	logger.Debugf("Executing 'echo foo'")
+	randomStr := strconv.FormatInt(rand.Int63n(99999), 10)
+
+	logger.Debugf("Executing 'echo %s'", randomStr)
 	result, err := executable.Run(
 		"run", DOCKER_IMAGE_STAGE_1,
-		"/usr/local/bin/docker-explorer", "echo", "foo",
+		"/usr/local/bin/docker-explorer", "echo", randomStr,
 	)
 	if err != nil {
 		return err
 	}
 
-	if err = assertStdout(result, "foo\n"); err != nil {
-		return err
-	}
-
-	logger.Debugf("Executing 'echo bar'")
-	result, err = executable.Run(
-		"run", DOCKER_IMAGE_STAGE_1,
-		"/usr/local/bin/docker-explorer", "echo", "bar",
-	)
-	if err != nil {
-		return err
-	}
-
-	if err = assertStdout(result, "bar\n"); err != nil {
-		return err
-	}
-
-	return nil
+	logger.Debugf("Checking if the command output was echo-ed..")
+	return assertStdoutContains(result, randomStr)
 }

@@ -28,6 +28,47 @@ func TestBasicExec(t *testing.T) {
 	}
 }
 
+func TestStdio(t *testing.T) {
+	m := NewStdIOMocker()
+	m.Start()
+	defer m.End()
+
+	// Previous solution should fail
+	exitCode := runCLIStage("stdio", "./test_helpers/stages/basic_exec")
+	if !assert.Equal(t, 1, exitCode) {
+		failWithMockerOutput(t, m)
+	}
+
+	m.Reset()
+
+	// Current solution should succeed
+	exitCode = runCLIStage("stdio", "./test_helpers/stages/stdio")
+	if !assert.Equal(t, 0, exitCode) {
+		failWithMockerOutput(t, m)
+	}
+}
+
+func TestExitCode(t *testing.T) {
+	m := NewStdIOMocker()
+	m.Start()
+	defer m.End()
+
+	// In this case, the previous solution works just fine!
+	// Previous solution should fail
+	// exitCode := runCLIStage("stdio", "./test_helpers/stages/stdio")
+	// if !assert.Equal(t, 1, exitCode) {
+	// 	failWithMockerOutput(t, m)
+	// }
+
+	m.Reset()
+
+	// Current solution should succeed
+	exitCode := runCLIStage("stdio", "./test_helpers/stages/exit_code")
+	if !assert.Equal(t, 0, exitCode) {
+		failWithMockerOutput(t, m)
+	}
+}
+
 func TestFSIsolation(t *testing.T) {
 	m := NewStdIOMocker()
 	m.Start()

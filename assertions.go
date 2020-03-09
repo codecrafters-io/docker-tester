@@ -14,10 +14,19 @@ func assertStdout(result ExecutableResult, expected string) error {
 	return nil
 }
 
+func assertStderr(result ExecutableResult, expected string) error {
+	actual := string(result.Stderr)
+	if expected != actual {
+		return fmt.Errorf("Expected %q as stderr, got: %q", expected, actual)
+	}
+
+	return nil
+}
+
 func assertStdoutContains(result ExecutableResult, expectedSubstring string) error {
 	actual := string(result.Stdout)
 	if !strings.Contains(actual, expectedSubstring) {
-		return fmt.Errorf("Expected stderr to contain %q, got: %q", expectedSubstring, actual)
+		return fmt.Errorf("Expected stdout to contain %q, got: %q", expectedSubstring, actual)
 	}
 
 	return nil

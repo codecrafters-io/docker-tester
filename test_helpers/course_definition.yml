@@ -11,7 +11,6 @@ description_md: |
 supported_languages: ["go"]
 starter_repos:
   go: https://github.com/codecrafters-io/docker-starter-golang
-
   
 marketing_intro_md: |
   In this challenge, you'll build a toy Docker implementation that can pull an
@@ -44,15 +43,57 @@ stages:
       (This is supposed to mimic the `docker run` command)
 
       Don't worry about pulling a docker image for now, just execute a program
-      on your local machine and return its output. In this stage, the tester
-      will use `/usr/local/bin/docker-explorer` as the command.
+      on your local machine. In this stage, the tester will use
+      `/usr/local/bin/docker-explorer` as the command.
 
       We'd like to make the first stage easy to pass, so we've included steps on
       how to pass this stage in the readme.
 
     marketing_md: |
-      In this stage, you'll execute a program using `fork` + `exec` and relay
-      its stdout, stderr and exit code to the parent process.
+      In this stage, you'll execute a program using `fork` + `exec`.
+
+  - slug: "stdio"
+    name: "Wireup stdout & stderr"
+    description_md: |
+      In this stage, you'll need to pipe the program's stdout and stderr to the
+      parent process.
+
+      If you've got any logs or print statements in your code, make sure to remove
+      them. The tester can't differentiate between debug logs and the actual
+      output!
+
+      Just like the previous stage, the tester will run your program like this: 
+
+      ```
+      your_program run <some_image> <command> <arg1> <arg2>
+      ```
+
+      `<command>` will always be `/usr/local/bin/docker-explorer` for now.
+
+    marketing_md: |
+      In this stage, you'll relay the child program's stdout & stderr to the
+      parent process.
+
+  - slug: "exit_code"
+    name: "Handle exit codes"
+    description_md: |
+      In this stage, you'll need to relay the program's exit code to the parent
+      process.
+
+      If the program you're executing exits with exit code 1, your program
+      should exit with exit code 1 too.
+
+      Just like the previous stage, the tester will run your program like this: 
+
+      ```
+      your_program run <some_image> <command> <arg1> <arg2>
+      ```
+
+      `<command>` will always be `/usr/local/bin/docker-explorer` for now.
+
+    marketing_md: |
+      In this stage, you'll wait for the child program's exit code and exit with
+      it.
 
   - slug: "fs_isolation"
     name: "Filesystem isolation"
@@ -72,6 +113,8 @@ stages:
       ```
       your_program run <some_image> <command> <arg1> <arg2>
       ```
+
+      `<command>` will always be `/usr/local/bin/docker-explorer` for now.
 
     marketing_md: |
       In this stage, you'll restrict a program's access to the host filesystem
@@ -112,7 +155,8 @@ stages:
 
       In this stage, you'll use [the Docker registry
       API](https://docs.docker.com/registry/spec/api/) to fetch the contents of
-      image and then execute a command within it.
+      a public image on [Docker Hub](https://hub.docker.com/) and then execute a
+      command within it.
 
       Just like the previous stage, the tester will run your program like this: 
 
@@ -126,8 +170,8 @@ stages:
       - Fetch the [image manifest](https://docs.docker.com/registry/spec/api/#pulling-an-image-manifest)
       - [Pull layers](https://docs.docker.com/registry/spec/api/#pulling-a-layer) of an image and extract them to the chroot directory
 
-      Since Go doesn't have archive extraction in its stdlib, you might want to
-      shell out and use `tar`. 
+      Since Go doesn't have an archive extraction utility in its stdlib, you
+      might want to shell out and use `tar`.
 
     marketing_md: |
       In this stage, you'll fetch an image from Docker Hub and execute a command
