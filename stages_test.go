@@ -48,7 +48,7 @@ func TestStdio(t *testing.T) {
 	}
 }
 
-func TestExitCode(t *testing.T) {
+func TestExitCodeStage(t *testing.T) {
 	m := NewStdIOMocker()
 	m.Start()
 	defer m.End()

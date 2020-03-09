@@ -48,6 +48,8 @@ func getLogger(isDebug bool, prefix string) *customLogger {
 }
 
 func getQuietLogger(prefix string) *customLogger {
+	color.NoColor = false
+
 	prefix = yellowColorize(prefix)
 	return &customLogger{
 		logger:  *log.New(os.Stdout, prefix, 0),
@@ -133,5 +135,9 @@ func (l *customLogger) Debugln(msg string) {
 		return
 	}
 	msg = debugColorize(msg)
+	l.logger.Println(msg)
+}
+
+func (l *customLogger) Plainln(msg string) {
 	l.logger.Println(msg)
 }
