@@ -6,12 +6,11 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+
 	"os"
 	"os/exec"
 	"strings"
 	"syscall"
-
-	"github.com/mholt/archiver/v3"
 )
 
 var REGISTRY_BASE_URL = "https://registry.hub.docker.com"
@@ -31,6 +30,10 @@ func main() {
 	var imageName = os.Args[2]
 	var command = os.Args[3]
 	var commandArgs = os.Args[3:]
+
+	if !strings.Contains(imageName, "/") {
+		imageName = "library/" + imageName
+	}
 
 	token, err := fetchToken(imageName)
 	if err != nil {
@@ -145,7 +148,7 @@ func downloadImageToPath(image string, token string, path string) error {
 	// TODO: Cleanup JSON parsing
 	for _, layer := range result["fsLayers"].([]interface{}) {
 		digest := layer.(map[string]interface{})["blobSum"].(string)
-		if err = downloadLayerToPath(token, image, digest, path); err != nil {
+		if err = downloadLayerToPath(client, token, image, digest, path); err != nil {
 			return err
 		}
 	}
@@ -153,9 +156,8 @@ func downloadImageToPath(image string, token string, path string) error {
 	return nil
 }
 
-func downloadLayerToPath(token string, image string, digest string, path string) error {
+func downloadLayerToPath(client *http.Client, token string, image string, digest string, path string) error {
 	url := fmt.Sprintf(REGISTRY_BASE_URL+"/v2/%s/blobs/%s", image, digest)
-	client := &http.Client{}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return err
@@ -179,14 +181,6 @@ func downloadLayerToPath(token string, image string, digest string, path string)
 		return err
 	}
 
-	fmt.Println(tmpFile.Name())
-	fmt.Println(path)
-	cmd := exec.Command("tar", "-xvf", "-C", path, tmpFile.Name())
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		return err
-	}
-
-	return archiver.Unarchive(tmpFile.Name(), path)
+	cmd := exec.Command("tar", "-xf", tmpFile.Name(), "-C", path)
+	return cmd.Run()
 }
