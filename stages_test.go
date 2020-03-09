@@ -12,20 +12,20 @@ func TestBasicExec(t *testing.T) {
 	m.Start()
 	defer m.End()
 
-	fmt.Println("Test success")
-	exitCode := runCLIStage("init", "./test_helpers/stages/basic_exec_success")
-	if !assert.Equal(t, 0, exitCode) {
-		failWithMockerOutput(t, m)
-	}
-
-	m.Reset()
-
 	fmt.Println("Test failure")
-	exitCode = runCLIStage("init", "./test_helpers/stages/basic_exec_failure")
+	exitCode := runCLIStage("init", "./test_helpers/stages/basic_exec_failure")
 	if !assert.Equal(t, 1, exitCode) {
 		failWithMockerOutput(t, m)
 	}
 	assert.Contains(t, m.ReadStdout(), "Test failed")
+
+	m.Reset()
+
+	fmt.Println("Test success")
+	exitCode = runCLIStage("init", "./test_helpers/stages/basic_exec")
+	if !assert.Equal(t, 0, exitCode) {
+		failWithMockerOutput(t, m)
+	}
 }
 
 func TestFSIsolation(t *testing.T) {
@@ -34,7 +34,7 @@ func TestFSIsolation(t *testing.T) {
 	defer m.End()
 
 	// Previous solution should fail
-	exitCode := runCLIStage("fs_isolation", "./test_helpers/stages/basic_exec_success")
+	exitCode := runCLIStage("fs_isolation", "./test_helpers/stages/basic_exec")
 	if !assert.Equal(t, 1, exitCode) {
 		failWithMockerOutput(t, m)
 	}
@@ -42,51 +42,51 @@ func TestFSIsolation(t *testing.T) {
 	m.Reset()
 
 	// Current solution should succeed
-	exitCode = runCLIStage("fs_isolation", "./test_helpers/stages/fs_isolation_success")
+	exitCode = runCLIStage("fs_isolation", "./test_helpers/stages/fs_isolation")
 	if !assert.Equal(t, 0, exitCode) {
 		failWithMockerOutput(t, m)
 	}
 }
 
-// func TestProcessIsolation(t *testing.T) {
-// 	m := NewStdIOMocker()
-// 	m.Start()
-// 	defer m.End()
+func TestProcessIsolation(t *testing.T) {
+	m := NewStdIOMocker()
+	m.Start()
+	defer m.End()
 
-// 	// Previous stage should fail
-// 	exitCode := runCLIStage("./test_helpers/stages/fs_isolation/correct.sh", 2)
-// 	if !assert.Equal(t, 1, exitCode) {
-// 		failWithMockerOutput(t, m)
-// 	}
+	// Previous stage should fail
+	exitCode := runCLIStage("process_isolation", "./test_helpers/stages/fs_isolation")
+	if !assert.Equal(t, 1, exitCode) {
+		failWithMockerOutput(t, m)
+	}
 
-// 	m.Reset()
+	m.Reset()
 
-// 	// Next stage should succeed
-// 	exitCode = runCLIStage("./test_helpers/stages/process_isolation/correct.sh", 2)
-// 	if !assert.Equal(t, 0, exitCode) {
-// 		failWithMockerOutput(t, m)
-// 	}
-// }
+	// Next stage should succeed
+	exitCode = runCLIStage("process_isolation", "./test_helpers/stages/process_isolation")
+	if !assert.Equal(t, 0, exitCode) {
+		failWithMockerOutput(t, m)
+	}
+}
 
-// func TestFetchFromRegistry(t *testing.T) {
-// 	m := NewStdIOMocker()
-// 	m.Start()
-// 	defer m.End()
+func TestFetchFromRegistry(t *testing.T) {
+	m := NewStdIOMocker()
+	m.Start()
+	defer m.End()
 
-// 	// Previous stage should fail
-// 	exitCode := runCLIStage("./test_helpers/stages/process_isolation/correct.sh", 3)
-// 	if !assert.Equal(t, 1, exitCode) {
-// 		failWithMockerOutput(t, m)
-// 	}
+	// Previous stage should fail
+	exitCode := runCLIStage("fetch_from_registry", "./test_helpers/stages/process_isolation")
+	if !assert.Equal(t, 1, exitCode) {
+		failWithMockerOutput(t, m)
+	}
 
-// 	m.Reset()
+	m.Reset()
 
-// 	// Next stage should succeed
-// 	exitCode = runCLIStage("./test_helpers/stages/fetch_from_registry/correct.sh", 3)
-// 	if !assert.Equal(t, 0, exitCode) {
-// 		failWithMockerOutput(t, m)
-// 	}
-// }
+	// Next stage should succeed
+	exitCode = runCLIStage("fetch_from_registry", "./test_helpers/stages/fetch_from_registry")
+	if !assert.Equal(t, 0, exitCode) {
+		failWithMockerOutput(t, m)
+	}
+}
 
 func runCLIStage(slug string, path string) (exitCode int) {
 	return RunCLI(map[string]string{

@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"os/exec"
 	"strings"
 	"syscall"
 
@@ -175,6 +176,15 @@ func downloadLayerToPath(token string, image string, digest string, path string)
 	}
 
 	if _, err := io.Copy(tmpFile, resp.Body); err != nil {
+		return err
+	}
+
+	fmt.Println(tmpFile.Name())
+	fmt.Println(path)
+	cmd := exec.Command("tar", "-xvf", "-C", path, tmpFile.Name())
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
 		return err
 	}
 
