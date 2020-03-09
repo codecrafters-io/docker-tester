@@ -28,25 +28,25 @@ func TestBasicExec(t *testing.T) {
 	assert.Contains(t, m.ReadStdout(), "Test failed")
 }
 
-// func TestFSIsolation(t *testing.T) {
-// 	m := NewStdIOMocker()
-// 	m.Start()
-// 	defer m.End()
+func TestFSIsolation(t *testing.T) {
+	m := NewStdIOMocker()
+	m.Start()
+	defer m.End()
 
-// 	// Previous stage should fail
-// 	exitCode := runCLIStage("./test_helpers/stages/basic_exec/correct.sh", 1)
-// 	if !assert.Equal(t, 1, exitCode) {
-// 		failWithMockerOutput(t, m)
-// 	}
+	// Previous solution should fail
+	exitCode := runCLIStage("fs_isolation", "./test_helpers/stages/basic_exec_success")
+	if !assert.Equal(t, 1, exitCode) {
+		failWithMockerOutput(t, m)
+	}
 
-// 	m.Reset()
+	m.Reset()
 
-// 	// Next stage should succeed
-// 	exitCode = runCLIStage("./test_helpers/stages/fs_isolation/correct.sh", 1)
-// 	if !assert.Equal(t, 0, exitCode) {
-// 		failWithMockerOutput(t, m)
-// 	}
-// }
+	// Current solution should succeed
+	exitCode = runCLIStage("fs_isolation", "./test_helpers/stages/fs_isolation_success")
+	if !assert.Equal(t, 0, exitCode) {
+		failWithMockerOutput(t, m)
+	}
+}
 
 // func TestProcessIsolation(t *testing.T) {
 // 	m := NewStdIOMocker()

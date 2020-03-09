@@ -5,6 +5,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"path"
 	"syscall"
 )
 
@@ -15,21 +16,16 @@ func main() {
 		os.Exit(1)
 	}
 
+	command := os.Args[3]
+	commandWithArgs := os.Args[3:]
+
 	tempDir, err := ioutil.TempDir("", "")
 	if err != nil {
 		fmt.Printf("TempDir Error: %v", err)
 		os.Exit(1)
 	}
 
-	if err = os.MkdirAll(tempDir+"/usr/bin", os.ModeDir); err != nil {
-		fmt.Printf("Mkdir error: %v", err)
-		os.Exit(1)
-	}
-
-	src := "/usr/bin/docker-explorer"
-	dest := tempDir + "/usr/bin/docker-explorer"
-
-	if err := copyExecutable(src, dest); err != nil {
+	if err := copyExecutable(command, tempDir); err != nil {
 		fmt.Printf("Copy Executable Error: %v", err)
 		os.Exit(1)
 	}
@@ -42,7 +38,7 @@ func main() {
 		Files: []uintptr{os.Stdin.Fd(), os.Stdout.Fd(), os.Stderr.Fd()},
 	}
 
-	pid, err := syscall.ForkExec(os.Args[3], os.Args[3:], &forkAttr)
+	pid, err := syscall.ForkExec(command, commandWithArgs, &forkAttr)
 	if err != nil {
 		fmt.Printf("Fork Error: %v", err)
 		os.Exit(1)
@@ -63,7 +59,12 @@ func main() {
 	os.Exit(state.ExitCode())
 }
 
-func copyExecutable(src string, dest string) error {
+func copyExecutable(src string, dir string) error {
+	dest := path.Join(dir, src)
+	if err := os.MkdirAll(path.Dir(dest), os.ModeDir); err != nil {
+		return err
+	}
+
 	from, err := os.Open(src)
 	if err != nil {
 		return err
