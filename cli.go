@@ -10,17 +10,11 @@ import (
 
 // RunCLI executes the CLI program with given flags, and returns the exit code
 func RunCLI(envMap map[string]string) int {
-	fmt.Println("Welcome to the docker challenge!")
-	fmt.Println("")
-
 	context, err := GetContext(envMap)
 	if err != nil {
 		fmt.Printf("%s", err)
 		return 1
 	}
-
-	context.print()
-	fmt.Println("")
 
 	executable := NewVerboseExecutable(context.binaryPath, getLogger(true, "[your_program] ").Plainln)
 
