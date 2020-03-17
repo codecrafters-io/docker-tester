@@ -30,40 +30,46 @@ func newStageRunner(isDebug bool) StageRunner {
 		isDebug: isDebug,
 		stages: []Stage{
 			Stage{
-				slug:    "init",
-				name:    "Stage 1: Execute a program",
-				logger:  getLogger(isDebug, "[stage-1] "),
-				runFunc: testBasicExec,
+				slug:              "init",
+				name:              "Stage 1: Execute a program",
+				logger:            getLogger(isDebug, "[stage-1] "),
+				runFunc:           testBasicExec,
+				runPreviousStages: true,
 			},
 			Stage{
-				slug:    "stdio",
-				name:    "Stage 2: Wireup stdout & stderr",
-				logger:  getLogger(isDebug, "[stage-2] "),
-				runFunc: testStdio,
+				slug:              "stdio",
+				name:              "Stage 2: Wireup stdout & stderr",
+				logger:            getLogger(isDebug, "[stage-2] "),
+				runFunc:           testStdio,
+				runPreviousStages: true,
 			},
 			Stage{
-				slug:    "exit_code",
-				name:    "Stage 3: Handle exit codes",
-				logger:  getLogger(isDebug, "[stage-3] "),
-				runFunc: testExitCode,
+				slug:              "exit_code",
+				name:              "Stage 3: Handle exit codes",
+				logger:            getLogger(isDebug, "[stage-3] "),
+				runFunc:           testExitCode,
+				runPreviousStages: true,
 			},
 			Stage{
-				slug:    "fs_isolation",
-				name:    "Stage 4: Filesystem isolation",
-				logger:  getLogger(isDebug, "[stage-4] "),
-				runFunc: testFSIsolation,
+				slug:              "fs_isolation",
+				name:              "Stage 4: Filesystem isolation",
+				logger:            getLogger(isDebug, "[stage-4] "),
+				runFunc:           testFSIsolation,
+				runPreviousStages: true,
 			},
 			Stage{
-				slug:    "process_isolation",
-				name:    "Stage 5: Process isolation",
-				logger:  getLogger(isDebug, "[stage-5] "),
-				runFunc: testProcessIsolation,
+				slug:              "process_isolation",
+				name:              "Stage 5: Process isolation",
+				logger:            getLogger(isDebug, "[stage-5] "),
+				runFunc:           testProcessIsolation,
+				runPreviousStages: true,
 			},
 			Stage{
-				slug:    "fetch_from_registry",
-				name:    "Stage 6: Fetching images from a registry",
-				logger:  getLogger(isDebug, "[stage-6] "),
-				runFunc: testFetchFromRegistry,
+				slug:              "fetch_from_registry",
+				name:              "Stage 6: Fetching images from a registry",
+				logger:            getLogger(isDebug, "[stage-6] "),
+				runFunc:           testFetchFromRegistry,
+				runPreviousStages: false, // Takes too long!
 			},
 		},
 	}
@@ -108,6 +114,40 @@ func (r StageRunner) Run(executable *Executable) StageRunnerResult {
 
 func (r StageRunner) StageCount() int {
 	return len(r.stages)
+}
+
+// ForStage returns a stageRunner with the stages required to be run
+func (r StageRunner) ForStage(stageSlug string) StageRunner {
+	currentStage := r.stageBySlug(stageSlug)
+	if !currentStage.runPreviousStages {
+		return StageRunner{
+			isDebug: r.isDebug,
+			stages:  []Stage{currentStage},
+		}
+	}
+
+	newStages := make([]Stage, 0)
+	for _, stage := range r.stages {
+		newStages = append(newStages, stage)
+		if stage.slug == stageSlug {
+			return StageRunner{
+				isDebug: r.isDebug,
+				stages:  newStages,
+			}
+		}
+	}
+
+	panic(fmt.Sprintf("Stage slug %v not found. Stages: %v", stageSlug, r.stages))
+}
+
+func (r StageRunner) stageBySlug(stageSlug string) Stage {
+	for _, stage := range r.stages {
+		if stage.slug == stageSlug {
+			return stage
+		}
+	}
+
+	panic("Didn't find stage by slug " + stageSlug)
 }
 
 // Truncated returns a stageRunner with fewer stages
@@ -164,8 +204,9 @@ func reportTestError(err error, isDebug bool, logger *customLogger) {
 
 // Stage is blah
 type Stage struct {
-	slug    string
-	name    string
-	runFunc func(executable *Executable, logger *customLogger) error
-	logger  *customLogger
+	slug              string
+	name              string
+	runFunc           func(executable *Executable, logger *customLogger) error
+	logger            *customLogger
+	runPreviousStages bool
 }

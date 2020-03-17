@@ -111,25 +111,25 @@ func TestProcessIsolation(t *testing.T) {
 
 // Takes too long!
 //
-// func TestFetchFromRegistry(t *testing.T) {
-// 	m := NewStdIOMocker()
-// 	m.Start()
-// 	defer m.End()
+func TestFetchFromRegistry(t *testing.T) {
+	m := NewStdIOMocker()
+	m.Start()
+	defer m.End()
 
-// 	// Previous stage should fail
-// 	exitCode := runCLIStage("fetch_from_registry", "./test_helpers/stages/process_isolation")
-// 	if !assert.Equal(t, 1, exitCode) {
-// 		failWithMockerOutput(t, m)
-// 	}
+	// Previous stage should fail
+	exitCode := runCLIStage("fetch_from_registry", "./test_helpers/stages/process_isolation")
+	if !assert.Equal(t, 1, exitCode) {
+		failWithMockerOutput(t, m)
+	}
 
-// 	m.Reset()
+	m.Reset()
 
-// 	// Next stage should succeed
-// 	exitCode = runCLIStage("fetch_from_registry", "./test_helpers/stages/fetch_from_registry")
-// 	if !assert.Equal(t, 0, exitCode) {
-// 		failWithMockerOutput(t, m)
-// 	}
-// }
+	// Next stage should succeed
+	exitCode = runCLIStage("fetch_from_registry", "./test_helpers/stages/fetch_from_registry")
+	if !assert.Equal(t, 0, exitCode) {
+		failWithMockerOutput(t, m)
+	}
+}
 
 func runCLIStage(slug string, path string) (exitCode int) {
 	return RunCLI(map[string]string{

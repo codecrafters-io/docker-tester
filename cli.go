@@ -22,7 +22,7 @@ func RunCLI(envMap map[string]string) int {
 	// installSignalHandler(cmd)
 
 	runner := newStageRunner(context.isDebug)
-	runner = runner.Truncated(context.currentStageSlug)
+	runner = runner.ForStage(context.currentStageSlug)
 
 	_, err = runInOrder(runner, executable)
 	if err != nil {
