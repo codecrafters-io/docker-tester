@@ -19,3 +19,6 @@ copy_course_file:
 		| jq -r .content \
 		| base64 -d \
 		> test_helpers/course_definition.yml
+
+test_output_failure:
+	time sh -c "while true; do go test -v executable_test.go executable.go || break; done"
