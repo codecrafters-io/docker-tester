@@ -20,5 +20,11 @@ copy_course_file:
 		| base64 -d \
 		> test_helpers/course_definition.yml
 
+test_output_failure_run:
+	time sh -c "while true; do go test -run TestRun -v executable_test.go executable.go || break; done"
+
+test_output_failure_start:
+	time sh -c "while true; do go test -run TestStart -v executable_test.go executable.go || break; done"
+
 test_output_failure:
 	time sh -c "while true; do go test -v executable_test.go executable.go || break; done"
