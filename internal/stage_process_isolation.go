@@ -1,4 +1,4 @@
-package main
+package internal
 
 func testProcessIsolation(executable *Executable, logger *customLogger) error {
 	logger.Debugln("Running 'mypid'")
