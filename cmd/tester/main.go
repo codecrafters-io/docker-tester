@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"github.com/codecrafters-io/redis-tester/internal"
+	"github.com/codecrafters-io/docker-tester/internal"
 	"os"
 	"strings"
 )

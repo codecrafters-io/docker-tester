@@ -9,7 +9,7 @@ import (
 	"os/exec"
 	"syscall"
 
-	"github.com/rohitpaulk/docker-challenge-tester/linewriter"
+	"github.com/codecrafters-io/docker-tester/linewriter"
 )
 
 // Executable represents a program that can be executed
