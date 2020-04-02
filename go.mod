@@ -1,4 +1,4 @@
-module github.com/rohitpaulk/docker-challenge-tester
+module github.com/codecrafters-io/docker-tester
 
 go 1.13
 

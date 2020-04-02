@@ -1,12 +1,13 @@
 package internal
 
 import (
+	"github.com/codecrafters-io/redis-tester/internal"
 	"os"
 	"strings"
 )
 
 func main() {
-	os.Exit(RunCLI(envMap()))
+	os.Exit(internal.RunCLI(envMap()))
 }
 
 func envMap() map[string]string {
