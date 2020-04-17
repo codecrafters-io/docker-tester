@@ -1,9 +1,10 @@
-package internal
+package main
 
 import (
-	"github.com/codecrafters-io/docker-tester/internal"
 	"os"
 	"strings"
+
+	"github.com/codecrafters-io/docker-tester/internal"
 )
 
 func main() {
