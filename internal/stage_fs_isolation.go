@@ -22,7 +22,7 @@ func testFSIsolation(executable *Executable, logger *customLogger) error {
 		return err
 	}
 
-	if err = assertStdoutContains(result, "no such file or directory"); err != nil {
+	if err = assertStdoutContains(result, "No such file or directory"); err != nil {
 		return err
 	}
 
