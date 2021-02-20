@@ -14,6 +14,9 @@ build:
 test:
 	go test -v ./internal/
 
+test_in_docker_container:
+	docker build -t docker-tester-dev . && docker run --cap-add "SYS_ADMIN" -it -e "TERM=xterm-256color" docker-tester-dev make test
+
 copy_course_file:
 	hub api \
 		repos/rohitpaulk/codecrafters-server/contents/codecrafters/store/data/docker.yml \
