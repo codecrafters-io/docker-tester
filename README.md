@@ -13,3 +13,8 @@ This is a program that validates your progress on the Docker challenge.
 - A binary named `your_docker.sh` that runs the user's docker command
 - A file named `codecrafters.yml`, with the following values: 
   - `debug`
+
+# Running tests
+
+- `make test` on a Linux machine
+- `make test_in_docker_container` on OSX
