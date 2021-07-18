@@ -1,8 +1,14 @@
 package internal
 
-import "strings"
+import (
+	tester_utils "github.com/codecrafters-io/tester-utils"
+	"strings"
+)
 
-func testFetchFromRegistry(executable *Executable, logger *customLogger) error {
+func testFetchFromRegistry(stageHarness tester_utils.StageHarness) error {
+	logger := stageHarness.Logger
+	executable := stageHarness.Executable
+
 	logger.Debugln("Running 'ls' using an alpine image")
 
 	result, err := executable.Run(
