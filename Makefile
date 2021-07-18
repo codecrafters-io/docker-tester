@@ -14,8 +14,12 @@ build:
 test:
 	go test -v ./internal/
 
-test_with_docker:
-	go test -v ./internal/
+test_with_docker: build
+	CODECRAFTERS_SUBMISSION_DIR=$(shell pwd)/internal/test_helpers/pass_all \
+	CODECRAFTERS_CURRENT_STAGE_SLUG="process_isolation" \
+	CODECRAFTERS_COURSE_PAGE_URL="test" \
+	dist/main.out
+
 
 test_in_docker_container:
 	docker build -t docker-tester-dev . && docker run --cap-add "SYS_ADMIN" -e "TERM=xterm-256color" docker-tester-dev make test
