@@ -1,5 +1,5 @@
 slug: "docker"
-name: "Docker"
+name: "Build your own Docker"
 description_md: |
   In this challenge, you'll build a toy Docker implementation that can pull an
   image from [Docker Hub](https://hub.docker.com/) and execute commands in it.
@@ -7,18 +7,25 @@ description_md: |
   [chroot](https://en.wikipedia.org/wiki/Chroot), [kernel
   namespaces](https://en.wikipedia.org/wiki/Linux_namespaces), the [docker
   registry API](https://docs.docker.com/registry/spec/api/) and much more.
+completion_percentage: 30
 
-supported_languages: ["go"]
+supported_languages: ["c", "go", "nim", "php"]
 starter_repos:
-  go: https://github.com/codecrafters-io/docker-starter-golang
-  
-marketing_intro_md: |
-  In this challenge, you'll build a toy Docker implementation that can pull an
-  image from [Docker Hub](https://hub.docker.com/) and execute commands in it.
-  Along the way, you'll learn about
-  [chroot](https://en.wikipedia.org/wiki/Chroot), [kernel
-  namespaces](https://en.wikipedia.org/wiki/Linux_namespaces), the [docker
-  registry API](https://docs.docker.com/registry/spec/api/) and much more.
+  c: https://github.com/codecrafters-io/docker-starter-c
+  go: https://github.com/codecrafters-io/docker-starter-go
+  nim: https://github.com/codecrafters-io/docker-starter-nim
+  php: https://github.com/codecrafters-io/docker-starter-php
+
+marketing:
+  description: Learn about chroot, kernel namespaces, the docker registry API and more
+  difficulty: medium
+  introduction_md: |
+    In this challenge, you'll build a toy Docker implementation that can pull an
+    image from [Docker Hub](https://hub.docker.com/) and execute commands in it.
+    Along the way, you'll learn about
+    [chroot](https://en.wikipedia.org/wiki/Chroot), [kernel
+    namespaces](https://en.wikipedia.org/wiki/Linux_namespaces), the [docker
+    registry API](https://docs.docker.com/registry/spec/api/) and much more.
 
 stages:
   - slug: "init"
@@ -62,7 +69,11 @@ stages:
       them. The tester can't differentiate between debug logs and the actual
       output!
 
-      Just like the previous stage, the tester will run your program like this: 
+      To test this behaviour locally, you could use the `echo` + `echo_stderr`
+      commands that `docker-explorer` exposes. Run `docker-explorer --help` to
+      view usage.
+
+      Just like the previous stage, the tester will run your program like this:
 
       ```
       your_program run <some_image> <command> <arg1> <arg2>
@@ -83,7 +94,10 @@ stages:
       If the program you're executing exits with exit code 1, your program
       should exit with exit code 1 too.
 
-      Just like the previous stage, the tester will run your program like this: 
+      To test this behaviour locally, you could use the `exit` command that
+      `docker-explorer` exposes. Run `docker-explorer --help` to view usage.
+
+      Just like the previous stage, the tester will run your program like this:
 
       ```
       your_program run <some_image> <command> <arg1> <arg2>
@@ -108,7 +122,22 @@ stages:
       when executing the command. You'll need to copy the binary being executed
       too.
 
-      Just like the previous stage, the tester will run your program like this: 
+      {{#lang_is_nim}}
+      Since Nim's [posix module](https://nim-lang.org/docs/posix.html) doesn't
+      have `chroot` defined, you'll need to implement this yourself! For
+      examples on how to do this, view the source for other syscalls like
+      [chdir](https://nim-lang.org/docs/posix.html#chdir%2Ccstring).
+      {{/lang_is_nim}}
+
+      {{#lang_is_go}}
+      When executing your program within the chroot directory, you might run into an error that says
+      `open /dev/null: no such file or directory`. This is because [Cmd.Run()](https://golang.org/pkg/os/exec/#Cmd.Run)
+      and its siblings expect `/dev/null` to be present. You can work around this by either creating an empty
+      `/dev/null` file inside the chroot directory, or by ensuring that `Cmd.Stdout`, `Cmd.Stderr` and `Cmd.Stdin` are not `nil`.
+      More details about this [here](https://rohitpaulk.com/articles/cmd-run-dev-null).
+      {{/lang_is_go}}
+
+      Just like the previous stage, the tester will run your program like this:
 
       ```
       your_program run <some_image> <command> <arg1> <arg2>
@@ -124,7 +153,7 @@ stages:
     name: "Process isolation"
     description_md: |
       In the previous stage, we guarded against malicious activity by
-      restricting an executable's access to the filesystem. 
+      restricting an executable's access to the filesystem.
 
       There's another resource that needs to be guarded: the process tree. The
       process you're executing is currently capable of viewing all other
@@ -135,7 +164,13 @@ stages:
       ensure that the program you execute has its own isolated process tree.
       The process being executed must see itself as PID 1.
 
-      Just like the previous stage, the tester will run your program like this: 
+      {{#lang_is_php}}
+      You'll need to use the `pcntl_unshare` function for this, which was
+      [added in PHP 7.4](https://www.php.net/manual/en/migration74.new-functions.php), and isn't properly documented
+      yet (as of 22 Jan 2021). Here's the [pull request](https://github.com/php/php-src/pull/3760) where it was added.
+      {{/lang_is_php}}
+
+      Just like the previous stage, the tester will run your program like this:
 
       ```
       your_program run <some_image> <command> <arg1> <arg2>
@@ -158,20 +193,43 @@ stages:
       a public image on [Docker Hub](https://hub.docker.com/) and then execute a
       command within it.
 
-      Just like the previous stage, the tester will run your program like this: 
+      You'll need to:
+
+      - Do a small [authentication dance](https://docs.docker.com/registry/spec/auth/token/)
+      - Fetch the [image manifest](https://docs.docker.com/registry/spec/api/#pulling-an-image-manifest)
+      - [Pull layers](https://docs.docker.com/registry/spec/api/#pulling-a-layer) of an image and extract them to the chroot directory
+
+      The base URL for Docker Hub's public registry is `registry.hub.docker.com`.
+
+      Just like the previous stage, the tester will run your program like this:
 
       ```
       your_program run <some_image> <command> <arg1> <arg2>
       ```
 
-      You'll need to:
+      The image used will be an [official
+      image](https://docs.docker.com/docker-hub/official_images/) from Docker
+      Hub. For example: [`alpine`](https://hub.docker.com/_/alpine),
+      [`ubuntu`](https://hub.docker.com/_/ubuntu),
+      [`busybox`](https://hub.docker.com/_/busybox). When interacting with the
+      Registry API, you'll need to prepend `library/` to the image names.
 
-      - Do a small authentication dance with the [registry API](https://docs.docker.com/registry/spec/api/)
-      - Fetch the [image manifest](https://docs.docker.com/registry/spec/api/#pulling-an-image-manifest)
-      - [Pull layers](https://docs.docker.com/registry/spec/api/#pulling-a-layer) of an image and extract them to the chroot directory
-
+      {{#lang_is_go}}
       Since Go doesn't have an archive extraction utility in its stdlib, you
       might want to shell out and use `tar`.
+      {{/lang_is_go}}
+
+      {{#lang_is_nim}}
+      Since Nim doesn't have an archive extraction utility in its stdlib, you
+      might want to shell out and use `tar`.
+      {{/lang_is_nim}}
+
+      {{#lang_is_c}}
+      Since C doesn't have an archive extraction utility in its stdlib, you
+      might want to shell out and use `tar`.
+
+      You can assume that `libcurl` is available in the build environment.
+      {{/lang_is_c}}
 
     marketing_md: |
       In this stage, you'll fetch an image from Docker Hub and execute a command

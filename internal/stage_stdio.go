@@ -1,11 +1,15 @@
 package internal
 
 import (
+	tester_utils "github.com/codecrafters-io/tester-utils"
 	"math/rand"
 	"strconv"
 )
 
-func testStdio(executable *Executable, logger *customLogger) error {
+func testStdio(stageHarness tester_utils.StageHarness) error {
+	logger := stageHarness.Logger
+	executable := stageHarness.Executable
+
 	randomStr := strconv.FormatInt(rand.Int63n(99999), 10)
 
 	logger.Debugf("Executing 'echo %s'", randomStr)

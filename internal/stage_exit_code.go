@@ -1,11 +1,15 @@
 package internal
 
 import (
+	tester_utils "github.com/codecrafters-io/tester-utils"
 	"math/rand"
 	"strconv"
 )
 
-func testExitCode(executable *Executable, logger *customLogger) error {
+func testExitCode(stageHarness tester_utils.StageHarness) error {
+	logger := stageHarness.Logger
+	executable := stageHarness.Executable
+
 	randomInt := rand.Intn(30)
 	randomStr := strconv.Itoa(randomInt)
 
