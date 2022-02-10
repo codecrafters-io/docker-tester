@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func testFetchFromRegistry(stageHarness tester_utils.StageHarness) error {
+func testFetchFromRegistry(stageHarness *tester_utils.StageHarness) error {
 	logger := stageHarness.Logger
 	executable := stageHarness.Executable
 

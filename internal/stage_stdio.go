@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func testStdio(stageHarness tester_utils.StageHarness) error {
+func testStdio(stageHarness *tester_utils.StageHarness) error {
 	logger := stageHarness.Logger
 	executable := stageHarness.Executable
 

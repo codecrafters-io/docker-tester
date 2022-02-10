@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 )
 
-func testFSIsolation(stageHarness tester_utils.StageHarness) error {
+func testFSIsolation(stageHarness *tester_utils.StageHarness) error {
 	logger := stageHarness.Logger
 	executable := stageHarness.Executable
 

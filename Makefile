@@ -39,3 +39,6 @@ test_output_failure_start:
 
 test_output_failure:
 	time sh -c "while true; do go test -v executable_test.go executable.go || break; done"
+
+update_tester_utils:
+	go get -u github.com/codecrafters-io/tester-utils
