@@ -9,7 +9,7 @@ func testFetchFromRegistry(stageHarness *tester_utils.StageHarness) error {
 	logger := stageHarness.Logger
 	executable := stageHarness.Executable
 
-	logger.Debugln("Running 'ls' using an alpine image")
+	logger.Debugln("Executing: ./your_docker.sh run alpine /bin/sh -c '/bin/ls /'")
 
 	result, err := executable.Run(
 		"run", "alpine",
