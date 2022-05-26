@@ -12,7 +12,7 @@ func testBasicExec(stageHarness *tester_utils.StageHarness) error {
 
 	randomStr := strconv.FormatInt(rand.Int63n(99999), 10)
 
-	logger.Debugf("Executing 'echo %s'", randomStr)
+	logger.Debugf("Executing: ./your_docker.sh run <some_image> /usr/local/bin/docker-explorer echo %s'", randomStr)
 	result, err := executable.Run(
 		"run", DOCKER_IMAGE_STAGE_1,
 		"/usr/local/bin/docker-explorer", "echo", randomStr,

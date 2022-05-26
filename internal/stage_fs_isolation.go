@@ -15,7 +15,7 @@ func testFSIsolation(stageHarness *tester_utils.StageHarness) error {
 	}
 
 	logger.Debugf("Created temp dir on host: %v", tempDir)
-	logger.Debugf("Executing 'ls' in %v", tempDir)
+	logger.Debugf("Executing: ./your_docker.sh run <some_image> /usr/local/bin/docker-explorer ls %v", tempDir)
 	logger.Debugf("(expecting that the directory won't be accessible)")
 
 	result, err := executable.Run(
