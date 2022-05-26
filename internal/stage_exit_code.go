@@ -13,7 +13,7 @@ func testExitCode(stageHarness *tester_utils.StageHarness) error {
 	randomInt := rand.Intn(30)
 	randomStr := strconv.Itoa(randomInt)
 
-	logger.Debugf("Executing 'exit %s'", randomStr)
+	logger.Debugf("Executing './your_docker.sh run <some_image> /usr/local/bin/docker-explorer exit %s'", randomStr)
 	result, err := executable.Run(
 		"run", DOCKER_IMAGE_STAGE_1,
 		"/usr/local/bin/docker-explorer", "exit", randomStr,
