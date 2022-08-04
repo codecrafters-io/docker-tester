@@ -3,7 +3,7 @@ module github.com/codecrafters-io/docker-tester
 go 1.13
 
 require (
-	github.com/codecrafters-io/tester-utils v0.1.36
+	github.com/codecrafters-io/tester-utils v0.1.42
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
