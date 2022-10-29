@@ -13,17 +13,5 @@ func RunCLI(env map[string]string) int {
 		return 1
 	}
 
-	tester.PrintDebugContext()
-
-	if !tester.RunStages() {
-		tester.PrintFailureMessage()
-		return 1
-	}
-
-	if !tester.RunAntiCheatStages() {
-		return 1
-	}
-
-	tester.PrintSuccessMessage()
-	return 0
+	return tester.RunCLI()
 }
