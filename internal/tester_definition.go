@@ -11,7 +11,7 @@ var testerDefinition = testerutils.TesterDefinition{
 		{
 			Number:                  1,
 			Slug:                    "init",
-			Title:                   "Execute a Program",
+			Title:                   "Execute a program",
 			TestFunc:                testBasicExec,
 			ShouldRunPreviousStages: true,
 		},
@@ -46,7 +46,7 @@ var testerDefinition = testerutils.TesterDefinition{
 		{
 			Number:                  6,
 			Slug:                    "fetch_from_registry",
-			Title:                   "Fetching images from a registry",
+			Title:                   "Fetch an image from the Docker Registry",
 			TestFunc:                testFetchFromRegistry,
 			ShouldRunPreviousStages: false, // Takes too long!
 		},
