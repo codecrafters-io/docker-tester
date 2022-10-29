@@ -1,5 +1,8 @@
 slug: "docker"
 name: "Build your own Docker"
+short_name: "Docker"
+release_status: "live"
+
 description_md: |
   In this challenge, you'll build a toy Docker implementation that can pull an
   image from [Docker Hub](https://hub.docker.com/) and execute commands in it.
@@ -7,14 +10,32 @@ description_md: |
   [chroot](https://en.wikipedia.org/wiki/Chroot), [kernel
   namespaces](https://en.wikipedia.org/wiki/Linux_namespaces), the [docker
   registry API](https://docs.docker.com/registry/spec/api/) and much more.
+
+short_description_md: |
+  Learn about chroot, kernel namespaces, the docker registry API and more
+
 completion_percentage: 30
 
-supported_languages: ["c", "go", "nim", "php"]
-starter_repos:
-  c: https://github.com/codecrafters-io/docker-starter-c
-  go: https://github.com/codecrafters-io/docker-starter-go
-  nim: https://github.com/codecrafters-io/docker-starter-nim
-  php: https://github.com/codecrafters-io/docker-starter-php
+languages:
+  - slug: "c"
+    starter_repository_url: "https://github.com/codecrafters-io/docker-starter-c"
+
+  - slug: "go"
+    starter_repository_url: "https://github.com/codecrafters-io/docker-starter-go"
+
+  - slug: "nim"
+    starter_repository_url: "https://github.com/codecrafters-io/docker-starter-nim"
+
+  - slug: "php"
+    starter_repository_url: "https://github.com/codecrafters-io/docker-starter-php"
+
+  - slug: "rust"
+    starter_repository_url: "https://github.com/codecrafters-io/docker-starter-rust"
+
+  - slug: "swift"
+    starter_repository_url: "https://github.com/codecrafters-io/docker-starter-swift"
+    release_status: "alpha"
+    alpha_tester_usernames: ["Terky"]
 
 marketing:
   description: Learn about chroot, kernel namespaces, the docker registry API and more
@@ -26,67 +47,79 @@ marketing:
     [chroot](https://en.wikipedia.org/wiki/Chroot), [kernel
     namespaces](https://en.wikipedia.org/wiki/Linux_namespaces), the [docker
     registry API](https://docs.docker.com/registry/spec/api/) and much more.
+  sample_extension_idea_title: "Build from Dockerfile"
+  sample_extension_idea_description: "A Docker implementation that can build images from a Dockerfile"
+  testimonials:
+    - author_name: "Raghav Dua"
+      author_description: "SRE, Coinbase"
+      author_avatar: "https://codecrafters.io/images/testimonials/raghav_dua.jpeg"
+      link: "https://github.com/duaraghav8"
+      text: |
+        I spent a full day on your Docker building course and ended up building the whole thing myself. As a SRE (and
+        mostly a user of docker), digging into the internals blew me away.
+    - author_name: "Maya Farber Brodsky"
+      author_description: "Student, Tel Aviv University"
+      author_avatar: "https://codecrafters.io/images/testimonials/maya_farber_brodsky.png"
+      link: "https://github.com/mfarberbrodsky"
+      text: |
+        I've started the Docker challenge, enjoying it a lot so far. Just the
+        right level of guidance, helpful and still gives you a lot of freedom
+        to explore and learn for yourself.
 
 stages:
   - slug: "init"
     name: "Execute a program"
+    difficulty: very_easy
     description_md: |
-      In the first couple of stages of this challenge, you'll be using
-      [`docker-explorer`](https://github.com/codecrafters-io/docker-explorer), a
-      custom test program that exposes a few commands like `echo` and `ls`.
-
-      [Follow the instructions
-      here](https://github.com/codecrafters-io/docker-explorer) to download the
-      program to your machine. The program must be accessible at
-      `/usr/local/bin/docker-explorer`.
-
-      In the first stage, your task is to implement a very basic version of `docker
-      run` that will be executed like this:
+      Your task is to implement a very basic version 
+      of [`docker run`](https://docs.docker.com/engine/reference/run/)</a>. It will
+      be executed similar to `docker run`:
 
       ```
-      your_program run <some_image> <command> <arg1> <arg2>
+      your_docker run ubuntu:latest /usr/local/bin/docker-explorer echo hey
       ```
 
-      (This is supposed to mimic the `docker run` command)
+      [docker-explorer](https://github.com/codecrafters-io/docker-explorer) is a custom test program that exposes
+      commands like `echo` and `ls`.
 
-      Don't worry about pulling a docker image for now, just execute a program
-      on your local machine and print its output. In this stage, the tester will
-      use `/usr/local/bin/docker-explorer` as the command.
-
-      We'd like to make the first stage easy to pass, so we've included steps on
-      how to pass this stage in the readme.
-
+      For now, don't worry about pulling the `ubuntu:latest` image. We will just
+      execute a local program for this stage and print its output. You'll work on 
+      pulling images from Docker Hub in stage 6.
     marketing_md: |
       In this stage, you'll execute a program using `fork` + `exec`.
+    tester_source_code_url: "https://github.com/codecrafters-io/docker-tester/blob/18245703a5beed8ee0a7e1cbb7204a7ee3b3b5d1/internal/stage_basic_exec.go#L9"
 
   - slug: "stdio"
     name: "Wireup stdout & stderr"
+    difficulty: easy
     description_md: |
-      In this stage, you'll need to pipe the program's stdout and stderr to the
+      You'll now pipe the program's stdout and stderr to the
       parent process.
+
+      Like the last stage, the tester will run your program like this:
+
+      ```
+      your_docker run ubuntu:latest /usr/local/bin/docker-explorer echo hey
+      ```
+      
+      To test this behaviour locally, you could use the `echo` + `echo_stderr`
+      commands that `docker-explorer` exposes. Run `docker-explorer --help` to
+      view usage.
 
       If you've got any logs or print statements in your code, make sure to remove
       them. The tester can't differentiate between debug logs and the actual
       output!
 
-      To test this behaviour locally, you could use the `echo` + `echo_stderr`
-      commands that `docker-explorer` exposes. Run `docker-explorer --help` to
-      view usage.
-
-      Just like the previous stage, the tester will run your program like this:
-
-      ```
-      your_program run <some_image> <command> <arg1> <arg2>
-      ```
-
-      `<command>` will always be `/usr/local/bin/docker-explorer` for now.
-
+      Note: The [README]({{readme_url}}) contains setup
+      information for this stage and beyond (takes < 5 min).
     marketing_md: |
       In this stage, you'll relay the child program's stdout & stderr to the
       parent process.
+    tester_source_code_url: "https://github.com/codecrafters-io/docker-tester/blob/18245703a5beed8ee0a7e1cbb7204a7ee3b3b5d1/internal/stage_stdio.go#L9"
 
   - slug: "exit_code"
     name: "Handle exit codes"
+    difficulty: easy
     description_md: |
       In this stage, you'll need to relay the program's exit code to the parent
       process.
@@ -100,17 +133,16 @@ stages:
       Just like the previous stage, the tester will run your program like this:
 
       ```
-      your_program run <some_image> <command> <arg1> <arg2>
+      your_docker run ubuntu:latest /usr/local/bin/docker-explorer exit 1
       ```
-
-      `<command>` will always be `/usr/local/bin/docker-explorer` for now.
-
     marketing_md: |
       In this stage, you'll wait for the child program's exit code and exit with
       it.
+    tester_source_code_url: "https://github.com/codecrafters-io/docker-tester/blob/18245703a5beed8ee0a7e1cbb7204a7ee3b3b5d1/internal/stage_exit_code.go#L9"
 
   - slug: "fs_isolation"
     name: "Filesystem isolation"
+    difficulty: medium
     description_md: |
       In the previous stage, we executed a program that existed locally on our
       machine. This program had write access to the whole filesystem, which
@@ -121,6 +153,13 @@ stages:
       the host machine. Create an empty temporary directory and `chroot` into it
       when executing the command. You'll need to copy the binary being executed
       too.
+
+      {{#lang_is_rust}}
+      At the time of writing this, the implementation of chroot in Rust's standard library
+      ([std::os::unix::fs::chroot](https://doc.rust-lang.org/std/os/unix/fs/fn.chroot.html)) is still a
+      nightly-only experimental API. We've included [libc](https://crates.io/crates/libc) as a dependency
+      instead.
+      {{/lang_is_rust}}
 
       {{#lang_is_nim}}
       Since Nim's [posix module](https://nim-lang.org/docs/posix.html) doesn't
@@ -137,20 +176,28 @@ stages:
       More details about this [here](https://rohitpaulk.com/articles/cmd-run-dev-null).
       {{/lang_is_go}}
 
+      {{#lang_is_rust}}
+      When executing your program within the chroot directory, you might run into an error that says
+      `no such file or directory` even if the binary exists within the chroot. This is because
+      [Command::output()](https://doc.rust-lang.org/std/process/struct.Command.html#method.output)
+      expects `/dev/null` to be present. You can work around this by creating an empty
+      `/dev/null` file inside the chroot directory. This cryptic error effects Go programs too, more details
+      [here](https://rohitpaulk.com/articles/cmd-run-dev-null).
+      {{/lang_is_rust}}
+
       Just like the previous stage, the tester will run your program like this:
 
       ```
-      your_program run <some_image> <command> <arg1> <arg2>
+      your_docker run ubuntu:latest /usr/local/bin/docker-explorer ls /some_dir
       ```
-
-      `<command>` will always be `/usr/local/bin/docker-explorer` for now.
-
     marketing_md: |
       In this stage, you'll restrict a program's access to the host filesystem
       by using [chroot](https://en.wikipedia.org/wiki/Chroot).
+    tester_source_code_url: "https://github.com/codecrafters-io/docker-tester/blob/18245703a5beed8ee0a7e1cbb7204a7ee3b3b5d1/internal/stage_fs_isolation.go#L8"
 
   - slug: "process_isolation"
     name: "Process isolation"
+    difficulty: medium
     description_md: |
       In the previous stage, we guarded against malicious activity by
       restricting an executable's access to the filesystem.
@@ -173,16 +220,17 @@ stages:
       Just like the previous stage, the tester will run your program like this:
 
       ```
-      your_program run <some_image> <command> <arg1> <arg2>
+      your_docker run ubuntu:latest /usr/local/bin/docker-explorer mypid
       ```
-
     marketing_md: |
       In this stage, you'll restrict a program's access to the host's process
       tree by using [PID
       namespaces](http://man7.org/linux/man-pages/man7/pid_namespaces.7.html).
+    tester_source_code_url: "https://github.com/codecrafters-io/docker-tester/blob/18245703a5beed8ee0a7e1cbb7204a7ee3b3b5d1/internal/stage_process_isolation.go#L5"
 
   - slug: "fetch_from_registry"
     name: "Fetch an image from the Docker Registry"
+    difficulty: hard
     description_md: |
       Your docker implementation can now execute a program with a fair degree of
       isolation - it can't modify files or interact with processes running on
@@ -201,18 +249,27 @@ stages:
 
       The base URL for Docker Hub's public registry is `registry.hub.docker.com`.
 
-      Just like the previous stage, the tester will run your program like this:
+      The tester will run your program like this:
 
       ```
-      your_program run <some_image> <command> <arg1> <arg2>
+      your_docker run ubuntu:latest /bin/echo hey
       ```
 
       The image used will be an [official
       image](https://docs.docker.com/docker-hub/official_images/) from Docker
-      Hub. For example: [`alpine`](https://hub.docker.com/_/alpine),
-      [`ubuntu`](https://hub.docker.com/_/ubuntu),
-      [`busybox`](https://hub.docker.com/_/busybox). When interacting with the
+      Hub. For example: [`alpine:latest`](https://hub.docker.com/_/alpine),
+      [`ubuntu:latest`](https://hub.docker.com/_/ubuntu),
+      [`busybox:latest`](https://hub.docker.com/_/busybox). When interacting with the
       Registry API, you'll need to prepend `library/` to the image names.
+
+      {{#lang_is_rust}}
+      Since Rust doesn't have an archive extraction utility in its stdlib, you
+      might want to shell out and use `tar`.
+
+      You can use the [reqwest](https://crates.io/crates/reqwest) crate to make
+      HTTP requests, we've included it in the `Cargo.toml` file. We've also included
+      [serde_json](https://crates.io/crates/serde_json) to help with parsing JSON.
+      {{/lang_is_rust}}
 
       {{#lang_is_go}}
       Since Go doesn't have an archive extraction utility in its stdlib, you
@@ -230,8 +287,8 @@ stages:
 
       You can assume that `libcurl` is available in the build environment.
       {{/lang_is_c}}
-
     marketing_md: |
       In this stage, you'll fetch an image from Docker Hub and execute a command
       in it. You'll need to use [the Docker Registry
       API](https://docs.docker.com/registry/spec/api/) for this.
+    tester_source_code_url: "https://github.com/codecrafters-io/docker-tester/blob/18245703a5beed8ee0a7e1cbb7204a7ee3b3b5d1/internal/stage_fetch_from_registry.go#L8"
