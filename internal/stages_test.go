@@ -135,7 +135,6 @@ func runCLIStage(slug string, path string) (exitCode int) {
 	return RunCLI(map[string]string{
 		"CODECRAFTERS_CURRENT_STAGE_SLUG": slug,
 		"CODECRAFTERS_SUBMISSION_DIR":     path,
-		"CODECRAFTERS_COURSE_PAGE_URL": "dummy",
 	})
 }
 

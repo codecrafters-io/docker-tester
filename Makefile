@@ -9,7 +9,6 @@ release:
 
 build:
 	go build -o dist/main.out ./cmd/tester
-	go build -o dist/starter.out ./cmd/starter_tester
 
 test:
 	go test -v ./internal/
@@ -17,7 +16,6 @@ test:
 test_with_docker: build
 	CODECRAFTERS_SUBMISSION_DIR=$(shell pwd)/internal/test_helpers/pass_all \
 	CODECRAFTERS_CURRENT_STAGE_SLUG="process_isolation" \
-	CODECRAFTERS_COURSE_PAGE_URL="test" \
 	dist/main.out
 
 
