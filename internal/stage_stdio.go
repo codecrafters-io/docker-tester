@@ -2,15 +2,15 @@ package internal
 
 import (
 	tester_utils "github.com/codecrafters-io/tester-utils"
-	"math/rand"
-	"strconv"
 )
 
 func testStdio(stageHarness *tester_utils.StageHarness) error {
+	initRandom()
+
 	logger := stageHarness.Logger
 	executable := stageHarness.Executable
 
-	randomStr := strconv.FormatInt(rand.Int63n(99999), 10)
+	randomStr := randomString(99999)
 
 	logger.Debugf("Executing: ./your_docker.sh run <some_image> /usr/local/bin/docker-explorer echo %s", randomStr)
 	result, err := executable.Run(
@@ -26,7 +26,7 @@ func testStdio(stageHarness *tester_utils.StageHarness) error {
 		return err
 	}
 
-	randomStr = strconv.FormatInt(rand.Int63n(99999), 10)
+	randomStr = randomString(99999)
 	logger.Debugf("Executing: ./your_docker.sh run <some_image> /usr/local/bin/docker-explorer echo_stderr %s", randomStr)
 	result, err = executable.Run(
 		"run", DOCKER_IMAGE_STAGE_1,
