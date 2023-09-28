@@ -1,0 +1,8 @@
+Debug = true
+
+[33m[stage-1] [0m[94m[94mRunning tests for Stage #1: init[0m[0m
+[33m[stage-1] [0m[36m[36mExecuting: ./your_docker.sh run <some_image> /usr/local/bin/docker-explorer echo 88398[0m[0m
+[33m[your_program] [0mwrong
+[33m[stage-1] [0m[36m[36mChecking if the command output was echo-ed..[0m[0m
+[33m[stage-1] [0m[91m[91mExpected stdout to contain "88398", got: "wrong\n"[0m[0m
+[33m[stage-1] [0m[91m[91mTest failed[0m[0m

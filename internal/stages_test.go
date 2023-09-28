@@ -1,145 +1,98 @@
 package internal
 
 import (
-	"fmt"
+	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	tester_utils_testing "github.com/codecrafters-io/tester-utils/testing"
 )
 
-func TestBasicExec(t *testing.T) {
-	m := NewStdIOMocker()
-	m.Start()
-	defer m.End()
+func TestStages(t *testing.T) {
+	os.Setenv("CODECRAFTERS_RANDOM_SEED", "1234567890")
 
-	fmt.Println("Test failure")
-	exitCode := runCLIStage("init", "./test_helpers/stages/basic_exec_failure")
-	if !assert.Equal(t, 1, exitCode) {
-		failWithMockerOutput(t, m)
+	testCases := map[string]tester_utils_testing.TesterOutputTestCase{
+		"basic_exec_failure": {
+			UntilStageSlug:      "init",
+			CodePath:            "./test_helpers/stages/basic_exec_failure",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/basic_exec/failure",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"basic_exec_success": {
+			UntilStageSlug:      "init",
+			CodePath:            "./test_helpers/stages/basic_exec",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/basic_exec/success",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"stdio_failure": {
+			UntilStageSlug:      "stdio",
+			CodePath:            "./test_helpers/stages/basic_exec",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/stdio/failure",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"stdio_success": {
+			UntilStageSlug:      "stdio",
+			CodePath:            "./test_helpers/stages/stdio",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/stdio/success",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"exit_code_success": {
+			UntilStageSlug:      "stdio",
+			CodePath:            "./test_helpers/stages/exit_code",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/exit_code/success",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"fs_isolation_failure": {
+			UntilStageSlug:      "fs_isolation",
+			CodePath:            "./test_helpers/stages/exit_code",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/fs_isolation/failure",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"fs_isolation_success": {
+			UntilStageSlug:      "fs_isolation",
+			CodePath:            "./test_helpers/stages/fs_isolation",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/fs_isolation/success",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"process_isolation_failure": {
+			UntilStageSlug:      "process_isolation",
+			CodePath:            "./test_helpers/stages/fs_isolation",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/process_isolation/failure",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"process_isolation_success": {
+			UntilStageSlug:      "process_isolation",
+			CodePath:            "./test_helpers/stages/process_isolation",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/process_isolation/success",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"fetch_from_registry_failure": {
+			UntilStageSlug:      "fetch_from_registry",
+			CodePath:            "./test_helpers/stages/process_isolation",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/fetch_from_registry/failure",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"fetch_from_registry_success": {
+			StageSlugs:          []string{"fetch_from_registry"},
+			CodePath:            "./test_helpers/stages/fetch_from_registry",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/fetch_from_registry/success",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 	}
-	assert.Contains(t, m.ReadStdout(), "Test failed")
 
-	m.Reset()
-
-	fmt.Println("Test success")
-	exitCode = runCLIStage("init", "./test_helpers/stages/basic_exec")
-	if !assert.Equal(t, 0, exitCode) {
-		failWithMockerOutput(t, m)
-	}
+	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)
 }
 
-func TestStdio(t *testing.T) {
-	m := NewStdIOMocker()
-	m.Start()
-	defer m.End()
-
-	// Previous solution should fail
-	exitCode := runCLIStage("stdio", "./test_helpers/stages/basic_exec")
-	if !assert.Equal(t, 1, exitCode) {
-		failWithMockerOutput(t, m)
-	}
-
-	m.Reset()
-
-	// Current solution should succeed
-	exitCode = runCLIStage("stdio", "./test_helpers/stages/stdio")
-	if !assert.Equal(t, 0, exitCode) {
-		failWithMockerOutput(t, m)
-	}
-}
-
-func TestExitCodeStage(t *testing.T) {
-	m := NewStdIOMocker()
-	m.Start()
-	defer m.End()
-
-	// In this case, the previous solution works just fine!
-	// Previous solution should fail
-	// exitCode := runCLIStage("stdio", "./test_helpers/stages/stdio")
-	// if !assert.Equal(t, 1, exitCode) {
-	// 	failWithMockerOutput(t, m)
-	// }
-
-	m.Reset()
-
-	// Current solution should succeed
-	exitCode := runCLIStage("stdio", "./test_helpers/stages/exit_code")
-	if !assert.Equal(t, 0, exitCode) {
-		failWithMockerOutput(t, m)
-	}
-}
-
-func TestFSIsolation(t *testing.T) {
-	m := NewStdIOMocker()
-	m.Start()
-	defer m.End()
-
-	// Previous solution should fail
-	exitCode := runCLIStage("fs_isolation", "./test_helpers/stages/basic_exec")
-	if !assert.Equal(t, 1, exitCode) {
-		failWithMockerOutput(t, m)
-	}
-
-	m.Reset()
-
-	// Current solution should succeed
-	exitCode = runCLIStage("fs_isolation", "./test_helpers/stages/fs_isolation")
-	if !assert.Equal(t, 0, exitCode) {
-		failWithMockerOutput(t, m)
-	}
-}
-
-func TestProcessIsolation(t *testing.T) {
-	m := NewStdIOMocker()
-	m.Start()
-	defer m.End()
-
-	// Previous stage should fail
-	exitCode := runCLIStage("process_isolation", "./test_helpers/stages/fs_isolation")
-	if !assert.Equal(t, 1, exitCode) {
-		failWithMockerOutput(t, m)
-	}
-
-	m.Reset()
-
-	// Next stage should succeed
-	exitCode = runCLIStage("process_isolation", "./test_helpers/stages/process_isolation")
-	if !assert.Equal(t, 0, exitCode) {
-		failWithMockerOutput(t, m)
-	}
-}
-
-// Takes too long!
-//
-func TestFetchFromRegistry(t *testing.T) {
-	m := NewStdIOMocker()
-	m.Start()
-	defer m.End()
-
-	// Previous stage should fail
-	exitCode := runCLIStage("fetch_from_registry", "./test_helpers/stages/process_isolation")
-	if !assert.Equal(t, 1, exitCode) {
-		failWithMockerOutput(t, m)
-	}
-
-	m.Reset()
-
-	// Next stage should succeed
-	exitCode = runCLIStage("fetch_from_registry", "./test_helpers/stages/fetch_from_registry")
-	if !assert.Equal(t, 0, exitCode) {
-		failWithMockerOutput(t, m)
-	}
-}
-
-func runCLIStage(slug string, path string) (exitCode int) {
-	return RunCLI(map[string]string{
-		"CODECRAFTERS_CURRENT_STAGE_SLUG": slug,
-		"CODECRAFTERS_SUBMISSION_DIR":     path,
-	})
-}
-
-func failWithMockerOutput(t *testing.T, m *IOMocker) {
-	m.End()
-	t.Error(fmt.Sprintf("stdout: \n%s\n\nstderr: \n%s", m.ReadStdout(), m.ReadStderr()))
-	t.FailNow()
+func normalizeTesterOutput(testerOutput []byte) []byte {
+	return testerOutput
 }

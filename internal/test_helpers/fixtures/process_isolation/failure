@@ -1,0 +1,34 @@
+Debug = true
+
+[33m[stage-1] [0m[94m[94mRunning tests for Stage #1: init[0m[0m
+[33m[stage-1] [0m[36m[36mExecuting: ./your_docker.sh run <some_image> /usr/local/bin/docker-explorer echo 88398[0m[0m
+[33m[your_program] [0m88398
+[33m[stage-1] [0m[36m[36mChecking if the command output was echo-ed..[0m[0m
+[33m[stage-1] [0m[92m[92mTest passed.[0m[0m
+
+[33m[stage-2] [0m[94m[94mRunning tests for Stage #2: stdio[0m[0m
+[33m[stage-2] [0m[36m[36mExecuting: ./your_docker.sh run <some_image> /usr/local/bin/docker-explorer echo 88398[0m[0m
+[33m[your_program] [0m88398
+[33m[stage-2] [0m[36m[36mChecking if the string was echo-ed to stdout..[0m[0m
+[33m[stage-2] [0m[36m[36mExecuting: ./your_docker.sh run <some_image> /usr/local/bin/docker-explorer echo_stderr 28626[0m[0m
+[33m[your_program] [0m28626
+[33m[stage-2] [0m[36m[36mChecking if the string was echo-ed to stderr..[0m[0m
+[33m[stage-2] [0m[92m[92mTest passed.[0m[0m
+
+[33m[stage-3] [0m[94m[94mRunning tests for Stage #3: exit_code[0m[0m
+[33m[stage-3] [0m[36m[36mExecuting: ./your_docker.sh run <some_image> /usr/local/bin/docker-explorer exit 3[0m[0m
+[33m[stage-3] [0m[36m[36mChecking the parent process's exit code..[0m[0m
+[33m[stage-3] [0m[92m[92mTest passed.[0m[0m
+
+[33m[stage-4] [0m[94m[94mRunning tests for Stage #4: fs_isolation[0m[0m
+[33m[stage-4] [0m[36m[36mCreated temp dir on host: /tmp/3904442710[0m[0m
+[33m[stage-4] [0m[36m[36mExecuting: ./your_docker.sh run <some_image> /usr/local/bin/docker-explorer ls /tmp/3904442710[0m[0m
+[33m[stage-4] [0m[36m[36m(expecting that the directory won't be accessible)[0m[0m
+[33m[your_program] [0mNo such file or directory
+[33m[stage-4] [0m[92m[92mTest passed.[0m[0m
+
+[33m[stage-5] [0m[94m[94mRunning tests for Stage #5: process_isolation[0m[0m
+[33m[stage-5] [0m[36mExecuting: ./your_docker.sh run <some_image> /usr/local/bin/docker-explorer mypid[0m
+[33m[your_program] [0m2150
+[33m[stage-5] [0m[91m[91mExpected "1\n" as stdout, got: "2150\n"[0m[0m
+[33m[stage-5] [0m[91m[91mTest failed[0m[0m
