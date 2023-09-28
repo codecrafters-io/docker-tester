@@ -1,15 +1,21 @@
 package internal
 
 import (
+	"os"
+	"path/filepath"
+	"strconv"
+
 	tester_utils "github.com/codecrafters-io/tester-utils"
-	"io/ioutil"
 )
 
 func testFSIsolation(stageHarness *tester_utils.StageHarness) error {
+	initRandom()
+
 	logger := stageHarness.Logger
 	executable := stageHarness.Executable
 
-	tempDir, err := ioutil.TempDir("", "")
+	// tempDir, err := ioutil.TempDir("", "")
+	tempDir, err := customTempDir()
 	if err != nil {
 		return err
 	}
@@ -35,4 +41,24 @@ func testFSIsolation(stageHarness *tester_utils.StageHarness) error {
 	}
 
 	return nil
+}
+
+func customTempDir() (name string, err error) {
+	dir := os.TempDir()
+
+	dirname := strconv.Itoa(int(randomInt(99999)))
+	fullPath := filepath.Join(dir, dirname)
+
+	if _, err := os.Stat(fullPath); !os.IsNotExist(err) {
+		if err = os.RemoveAll(fullPath); err != nil {
+			return "", err
+		}
+	}
+
+	err = os.Mkdir(fullPath, 0777)
+	if err != nil {
+		return "", err
+	}
+
+	return fullPath, nil
 }
