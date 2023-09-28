@@ -19,7 +19,7 @@ test_with_docker: build
 	dist/main.out
 
 test_in_docker_container:
-	docker build -t docker-tester-dev . && docker run --cap-add "SYS_ADMIN" -e "TERM=xterm-256color" docker-teter-dev make test
+	docker build -t docker-tester-dev . && docker run --cap-add "SYS_ADMIN" -e "TERM=xterm-256color" docker-tester-dev make test
 
 test_in_docker_container_and_update_fixtures:
 	docker build -t docker-tester-dev . && \
