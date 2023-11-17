@@ -1,6 +1,6 @@
 Debug = true
 
-[33m[stage-1] [0m[94m[94mRunning tests for Stage #1: fetch_from_registry[0m[0m
+[33m[stage-1] [0m[94mRunning tests for Stage #1: fetch_from_registry[0m
 [33m[stage-1] [0m[36mExecuting: ./your_docker.sh run alpine /bin/sh -c '/bin/ls /'[0m
 [33m[your_program] [0mbin
 [33m[your_program] [0mdev
@@ -19,4 +19,4 @@ Debug = true
 [33m[your_program] [0mtmp
 [33m[your_program] [0musr
 [33m[your_program] [0mvar
-[33m[stage-1] [0m[92m[92mTest passed.[0m[0m
+[33m[stage-1] [0m[92mTest passed.[0m
