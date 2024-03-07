@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	"strconv"
 
-	tester_utils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testFSIsolation(stageHarness *tester_utils.StageHarness) error {
+func testFSIsolation(stageHarness *test_case_harness.TestCaseHarness) error {
 	initRandom()
 
 	logger := stageHarness.Logger
