@@ -1,8 +1,8 @@
 package internal
 
-import tester_utils "github.com/codecrafters-io/tester-utils"
+import "github.com/codecrafters-io/tester-utils/test_case_harness"
 
-func testProcessIsolation(stageHarness *tester_utils.StageHarness) error {
+func testProcessIsolation(stageHarness *test_case_harness.TestCaseHarness) error {
 	logger := stageHarness.Logger
 	executable := stageHarness.Executable
 

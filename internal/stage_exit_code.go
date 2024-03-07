@@ -1,11 +1,11 @@
 package internal
 
 import (
-	tester_utils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 	"strconv"
 )
 
-func testExitCode(stageHarness *tester_utils.StageHarness) error {
+func testExitCode(stageHarness *test_case_harness.TestCaseHarness) error {
 	initRandom()
 
 	logger := stageHarness.Logger

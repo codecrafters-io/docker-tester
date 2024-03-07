@@ -1,36 +1,36 @@
 package internal
 
 import (
-	testerutils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/tester_definition"
 )
 
-var testerDefinition = testerutils.TesterDefinition{
-	AntiCheatTestCases:    []testerutils.TestCase{},
+var testerDefinition = tester_definition.TesterDefinition{
+	AntiCheatTestCases: []tester_definition.TestCase{},
 	ExecutableFileName: "your_docker.sh",
-	TestCases: []testerutils.TestCase{
+	TestCases: []tester_definition.TestCase{
 		{
-			Slug:                    "init",
-			TestFunc:                testBasicExec,
+			Slug:     "init",
+			TestFunc: testBasicExec,
 		},
 		{
-			Slug:                    "stdio",
-			TestFunc:                testStdio,
+			Slug:     "stdio",
+			TestFunc: testStdio,
 		},
 		{
-			Slug:                    "exit_code",
-			TestFunc:                testExitCode,
+			Slug:     "exit_code",
+			TestFunc: testExitCode,
 		},
 		{
-			Slug:                    "fs_isolation",
-			TestFunc:                testFSIsolation,
+			Slug:     "fs_isolation",
+			TestFunc: testFSIsolation,
 		},
 		{
-			Slug:                    "process_isolation",
-			TestFunc:                testProcessIsolation,
+			Slug:     "process_isolation",
+			TestFunc: testProcessIsolation,
 		},
 		{
-			Slug:                    "fetch_from_registry",
-			TestFunc:                testFetchFromRegistry,
+			Slug:     "fetch_from_registry",
+			TestFunc: testFetchFromRegistry,
 		},
 	},
 }
