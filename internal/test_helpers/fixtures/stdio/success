@@ -1,11 +1,5 @@
 Debug = true
 
-[33m[stage-1] [0m[94mRunning tests for Stage #1: init[0m
-[33m[stage-1] [0m[36mExecuting: ./your_docker.sh run <some_image> /usr/local/bin/docker-explorer echo 88398[0m
-[33m[your_program] [0m88398
-[33m[stage-1] [0m[36mChecking if the command output was echo-ed..[0m
-[33m[stage-1] [0m[92mTest passed.[0m
-
 [33m[stage-2] [0m[94mRunning tests for Stage #2: stdio[0m
 [33m[stage-2] [0m[36mExecuting: ./your_docker.sh run <some_image> /usr/local/bin/docker-explorer echo 88398[0m
 [33m[your_program] [0m88398
@@ -14,3 +8,9 @@ Debug = true
 [33m[your_program] [0m28626
 [33m[stage-2] [0m[36mChecking if the string was echo-ed to stderr..[0m
 [33m[stage-2] [0m[92mTest passed.[0m
+
+[33m[stage-1] [0m[94mRunning tests for Stage #1: init[0m
+[33m[stage-1] [0m[36mExecuting: ./your_docker.sh run <some_image> /usr/local/bin/docker-explorer echo 88398[0m
+[33m[your_program] [0m88398
+[33m[stage-1] [0m[36mChecking if the command output was echo-ed..[0m
+[33m[stage-1] [0m[92mTest passed.[0m
