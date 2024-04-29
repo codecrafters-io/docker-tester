@@ -2,8 +2,6 @@ Debug = true
 
 [33m[stage-6] [0m[94mRunning tests for Stage #6: fetch_from_registry[0m
 [33m[stage-6] [0m[36mExecuting: ./your_docker.sh run alpine /bin/sh -c '/bin/ls /'[0m
-[33m[your_program] [0m# command-line-arguments
-[33m[your_program] [0mtest_helpers/stages/process_isolation/main.go:36:4: unknown field Cloneflags in struct literal of type syscall.SysProcAttr
-[33m[your_program] [0mtest_helpers/stages/process_isolation/main.go:36:24: undefined: syscall.CLONE_NEWPID
+[33m[your_program] [0mExpected 'run <image> <command>' as the command! args: ["run" "alpine" "/bin/sh" "-c" "/bin/ls /"]
 [33m[stage-6] [0m[91mExpected 0 as exit code, got: 1[0m
 [33m[stage-6] [0m[91mTest failed[0m
