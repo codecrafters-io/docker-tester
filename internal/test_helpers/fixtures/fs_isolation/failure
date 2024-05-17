@@ -1,6 +1,6 @@
 Debug = true
 
-[33m[stage-4] [0m[94mRunning tests for Stage #4: fs_isolation[0m
+[33m[stage-4] [0m[94mRunning tests for Stage #4: if6[0m
 [33m[stage-4] [0m[36mCreated temp dir on host: /tmp/88398[0m
 [33m[stage-4] [0m[36mExecuting: ./your_docker.sh run <some_image> /usr/local/bin/docker-explorer ls /tmp/88398[0m
 [33m[stage-4] [0m[36m(expecting that the directory won't be accessible)[0m
