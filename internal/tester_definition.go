@@ -9,27 +9,27 @@ var testerDefinition = tester_definition.TesterDefinition{
 	ExecutableFileName: "your_docker.sh",
 	TestCases: []tester_definition.TestCase{
 		{
-			Slug:     "init",
+			Slug:     "je9",
 			TestFunc: testBasicExec,
 		},
 		{
-			Slug:     "stdio",
+			Slug:     "kf3",
 			TestFunc: testStdio,
 		},
 		{
-			Slug:     "exit_code",
+			Slug:     "cn8",
 			TestFunc: testExitCode,
 		},
 		{
-			Slug:     "fs_isolation",
+			Slug:     "if6",
 			TestFunc: testFSIsolation,
 		},
 		{
-			Slug:     "process_isolation",
+			Slug:     "lu7",
 			TestFunc: testProcessIsolation,
 		},
 		{
-			Slug:     "fetch_from_registry",
+			Slug:     "hs1",
 			TestFunc: testFetchFromRegistry,
 		},
 	},
