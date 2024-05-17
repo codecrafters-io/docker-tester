@@ -67,29 +67,31 @@ marketing:
         to explore and learn for yourself.
 
 stages:
-  - slug: "init"
+  - legacy_slug: "init"
+    slug: "je9"
     name: "Execute a program"
     difficulty: very_easy
     description_md: |-
-      Your task is to implement a very basic version 
+      Your task is to implement a very basic version
       of [`docker run`](https://docs.docker.com/engine/reference/run/)</a>. It will
       be executed similar to `docker run`:
 
       ```
-      your_docker run ubuntu:latest /usr/local/bin/docker-explorer echo hey
+      mydocker run alpine:latest /usr/local/bin/docker-explorer echo hey
       ```
 
       [docker-explorer](https://github.com/codecrafters-io/docker-explorer) is a custom test program that exposes
       commands like `echo` and `ls`.
 
-      For now, don't worry about pulling the `ubuntu:latest` image. We will just
-      execute a local program for this stage and print its output. You'll work on 
+      For now, don't worry about pulling the `alpine:latest` image. We will just
+      execute a local program for this stage and print its output. You'll work on
       pulling images from Docker Hub in stage 6.
     marketing_md: |-
       In this stage, you'll execute a program using `fork` + `exec`.
     tester_source_code_url: "https://github.com/codecrafters-io/docker-tester/blob/18245703a5beed8ee0a7e1cbb7204a7ee3b3b5d1/internal/stage_basic_exec.go#L9"
 
-  - slug: "stdio"
+  - legacy_slug: "stdio"
+    slug: "kf3"
     name: "Wireup stdout & stderr"
     difficulty: easy
     description_md: |-
@@ -99,9 +101,9 @@ stages:
       Like the last stage, the tester will run your program like this:
 
       ```
-      your_docker run ubuntu:latest /usr/local/bin/docker-explorer echo hey
+      mydocker run alpine:latest /usr/local/bin/docker-explorer echo hey
       ```
-      
+
       To test this behaviour locally, you could use the `echo` + `echo_stderr`
       commands that `docker-explorer` exposes. Run `docker-explorer --help` to
       view usage.
@@ -110,14 +112,15 @@ stages:
       them. The tester can't differentiate between debug logs and the actual
       output!
 
-      Note: The [README]({{readme_url}}) contains setup
+      Note: The **README** in your repository contains setup
       information for this stage and beyond (takes < 5 min).
     marketing_md: |-
       In this stage, you'll relay the child program's stdout & stderr to the
       parent process.
     tester_source_code_url: "https://github.com/codecrafters-io/docker-tester/blob/18245703a5beed8ee0a7e1cbb7204a7ee3b3b5d1/internal/stage_stdio.go#L9"
 
-  - slug: "exit_code"
+  - legacy_slug: "exit_code"
+    slug: "cn8"
     name: "Handle exit codes"
     difficulty: easy
     description_md: |-
@@ -133,14 +136,15 @@ stages:
       Just like the previous stage, the tester will run your program like this:
 
       ```
-      your_docker run ubuntu:latest /usr/local/bin/docker-explorer exit 1
+      mydocker run alpine:latest /usr/local/bin/docker-explorer exit 1
       ```
     marketing_md: |-
       In this stage, you'll wait for the child program's exit code and exit with
       it.
     tester_source_code_url: "https://github.com/codecrafters-io/docker-tester/blob/18245703a5beed8ee0a7e1cbb7204a7ee3b3b5d1/internal/stage_exit_code.go#L9"
 
-  - slug: "fs_isolation"
+  - legacy_slug: "fs_isolation"
+    slug: "if6"
     name: "Filesystem isolation"
     difficulty: medium
     description_md: |-
@@ -188,14 +192,15 @@ stages:
       Just like the previous stage, the tester will run your program like this:
 
       ```
-      your_docker run ubuntu:latest /usr/local/bin/docker-explorer ls /some_dir
+      mydocker run alpine:latest /usr/local/bin/docker-explorer ls /some_dir
       ```
     marketing_md: |-
       In this stage, you'll restrict a program's access to the host filesystem
       by using [chroot](https://en.wikipedia.org/wiki/Chroot).
     tester_source_code_url: "https://github.com/codecrafters-io/docker-tester/blob/18245703a5beed8ee0a7e1cbb7204a7ee3b3b5d1/internal/stage_fs_isolation.go#L8"
 
-  - slug: "process_isolation"
+  - legacy_slug: "process_isolation"
+    slug: "lu7"
     name: "Process isolation"
     difficulty: medium
     description_md: |-
@@ -220,7 +225,7 @@ stages:
       Just like the previous stage, the tester will run your program like this:
 
       ```
-      your_docker run ubuntu:latest /usr/local/bin/docker-explorer mypid
+      mydocker run alpine:latest /usr/local/bin/docker-explorer mypid
       ```
     marketing_md: |-
       In this stage, you'll restrict a program's access to the host's process
@@ -228,8 +233,10 @@ stages:
       namespaces](http://man7.org/linux/man-pages/man7/pid_namespaces.7.html).
     tester_source_code_url: "https://github.com/codecrafters-io/docker-tester/blob/18245703a5beed8ee0a7e1cbb7204a7ee3b3b5d1/internal/stage_process_isolation.go#L5"
 
-  - slug: "fetch_from_registry"
+  - legacy_slug: "fetch_from_registry"
+    slug: "hs1"
     name: "Fetch an image from the Docker Registry"
+    should_skip_previous_stages_for_test_run: true
     difficulty: hard
     description_md: |-
       Your docker implementation can now execute a program with a fair degree of
@@ -252,13 +259,13 @@ stages:
       The tester will run your program like this:
 
       ```
-      your_docker run ubuntu:latest /bin/echo hey
+      mydocker run alpine:latest /bin/echo hey
       ```
 
       The image used will be an [official
       image](https://docs.docker.com/docker-hub/official_images/) from Docker
       Hub. For example: [`alpine:latest`](https://hub.docker.com/_/alpine),
-      [`ubuntu:latest`](https://hub.docker.com/_/ubuntu),
+      [`alpine:latest`](https://hub.docker.com/_/alpine),
       [`busybox:latest`](https://hub.docker.com/_/busybox). When interacting with the
       Registry API, you'll need to prepend `library/` to the image names.
 
