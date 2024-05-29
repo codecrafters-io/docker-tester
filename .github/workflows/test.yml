@@ -11,7 +11,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v1
         with:
-          go-version: 1.17.x
+          go-version: 1.21.x
       - run: sudo curl -Lo /usr/local/bin/docker-explorer https://github.com/codecrafters-io/docker-explorer/releases/download/v17/v17_linux_amd64
       - run: sudo chmod +x /usr/local/bin/docker-explorer
       - run: sudo make test_in_docker_container
