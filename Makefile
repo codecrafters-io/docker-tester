@@ -15,7 +15,7 @@ test:
 
 test_with_docker: build
 	CODECRAFTERS_SUBMISSION_DIR=$(shell pwd)/internal/test_helpers/pass_all \
-	CODECRAFTERS_TEST_CASES_JSON="[{"slug":"init","tester_log_prefix":"stage-1","title":"Stage #1: Execute a program"},{"slug":"stdio","tester_log_prefix":"stage-2","title":"Stage #2: Wireup stdout \u0026 stderr"},{"slug":"exit_code","tester_log_prefix":"stage-3","title":"Stage #3: Handle exit codes"},{"slug":"fs_isolation","tester_log_prefix":"stage-4","title":"Stage #4: Filesystem isolation"},{"slug":"process_isolation","tester_log_prefix":"stage-5","title":"Stage #5: Process isolation"},{"slug":"fetch_from_registry","tester_log_prefix":"stage-6","title":"Stage #6: Fetch an image from the Docker Registry"}]" \
+	CODECRAFTERS_TEST_CASES_JSON="[{"slug":"je9","tester_log_prefix":"stage-1","title":"Stage #1: Execute a program"},{"slug":"kf3","tester_log_prefix":"stage-2","title":"Stage #2: Wireup stdout \u0026 stderr"},{"slug":"cn8","tester_log_prefix":"stage-3","title":"Stage #3: Handle exit codes"},{"slug":"if6","tester_log_prefix":"stage-4","title":"Stage #4: Filesystem isolation"},{"slug":"lu7","tester_log_prefix":"stage-5","title":"Stage #5: Process isolation"},{"slug":"hs1","tester_log_prefix":"stage-6","title":"Stage #6: Fetch an image from the Docker Registry"}]" \
 	dist/main.out
 
 test_in_docker_container:
