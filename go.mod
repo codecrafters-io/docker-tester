@@ -5,7 +5,7 @@ go 1.21
 toolchain go1.22.1
 
 require (
-	github.com/codecrafters-io/tester-utils v0.2.33
+	github.com/codecrafters-io/tester-utils v0.2.34
 	github.com/stretchr/testify v1.8.4
 	gopkg.in/yaml.v2 v2.4.0
 )
