@@ -1,12 +1,12 @@
 module github.com/codecrafters-io/docker-tester
 
-go 1.23.0
+go 1.24
 
 toolchain go1.24.4
 
 require (
-	github.com/codecrafters-io/tester-utils v0.2.38
-	github.com/stretchr/testify v1.9.0
+	github.com/codecrafters-io/tester-utils v0.4.5
+	github.com/stretchr/testify v1.10.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 
